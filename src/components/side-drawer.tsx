@@ -36,6 +36,7 @@ export default function DrawerContainer() {
   );
 
   const debouncedUpdateContent = useCallback(
+    // TODO: debounce 좀 이상한데 해결하기
     debounce(async (noteId: string, newContent: string) => {
       await updateNote(noteId, { content: newContent });
     }, 500),
@@ -45,13 +46,17 @@ export default function DrawerContainer() {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setTitle(value);
-    debouncedUpdateTitle(currentNote?.id!, value);
+    if (currentNote?.id) {
+      debouncedUpdateTitle(currentNote.id, value);
+    }
   };
 
   const handleContentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
     setContent(value);
-    debouncedUpdateContent(currentNote?.id!, value);
+    if (currentNote?.id) {
+      debouncedUpdateContent(currentNote.id, value);
+    }
   };
 
   useEffect(() => {
