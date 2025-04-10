@@ -6,7 +6,7 @@ interface UseClickOutsideProps {
   redirectPath: string;
 }
 
-export const useClickOutside = ({ ref, redirectPath }: UseClickOutsideProps) => {
+export function useClickOutside({ ref, redirectPath }: UseClickOutsideProps) {
   const router = useRouter();
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -23,4 +23,10 @@ export const useClickOutside = ({ ref, redirectPath }: UseClickOutsideProps) => 
       document.removeEventListener("pointerdown", handleClickOutside);
     };
   }, []);
-};
+
+  const resetFocus = () => {
+    router.push(redirectPath);
+  };
+
+  return { resetFocus };
+}
