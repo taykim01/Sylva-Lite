@@ -132,4 +132,26 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Custom text styles */
+  .text-m14 {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .text-m16 {
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .text-m18 {
+    font-size: 18px;
+    font-weight: 500;
+  }
+  .text-r12 {
+    font-size: 12px;
+    font-weight: 400;
+  }
+  .text-r14 {
+    font-size: 14px;
+    font-weight: 400;
+  }
 }

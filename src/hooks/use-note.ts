@@ -5,31 +5,13 @@ import { handleCreateEmptyNote, handleDeleteNote, handleGetMyNotes, handleUpdate
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Tables } from "../../database.types";
 
-type UseNoteReturn = {
-  notes: Tables<"note">[] | null;
-  loading: boolean;
-  error: string | null;
-  createNote: () => Promise<void>;
-  readMyNotes: () => Promise<void>;
-  updateNote: (id: string, updates: Partial<{ title: string; content: string; x: number; y: number }>) => Promise<void>;
-  deleteNote: () => Promise<void>;
-  currentNote: Tables<"note"> | undefined;
-  editingTitle: string;
-  editingContent: string;
-  setEditingTitle: (title: string) => void;
-  setEditingContent: (content: string) => void;
-};
-
-export function useNote(): UseNoteReturn {
+export function useNote() {
   const searchParams = useSearchParams();
   const noteId = searchParams.get("note_id") as string | undefined;
   const { notes, _setNotes, _addNote, _updateNote, _deleteNote } = useNoteStore();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [editingTitle, setEditingTitle] = useState("");
-  const [editingContent, setEditingContent] = useState("");
 
   const createNote = async () => {
     setLoading(true);
@@ -101,9 +83,5 @@ export function useNote(): UseNoteReturn {
     updateNote,
     deleteNote,
     currentNote,
-    editingTitle,
-    editingContent,
-    setEditingTitle,
-    setEditingContent,
   };
 }
