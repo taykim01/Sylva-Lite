@@ -12,6 +12,8 @@ export function useClickOutside({ ref, redirectPath }: UseClickOutsideProps) {
   const handleClickOutside = (event: MouseEvent) => {
     const target = event.target as HTMLElement;
     if (target.closest("[data-dropdown-menu]")) return;
+    if (target.closest("[data-slot='alert-dialog-content']") || target.closest("[data-slot='alert-dialog-overlay']"))
+      return;
     if (ref.current && !ref.current.contains(target)) {
       router.push(redirectPath);
     }

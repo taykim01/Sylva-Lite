@@ -22,7 +22,7 @@ export default function Header() {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <div className="flex items-center gap-1 px-2 py-1 rounded-lg cursor-pointer">
-            <div className="text-slate-800 text-m14">{user?.email}</div>
+            <div className="text-slate-800 text-m14 polymath">{user?.email}</div>
             <ChevronDown className="w-5 text-slate-600" />
           </div>
         </DropdownMenuTrigger>

@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useClickOutside } from "@/hooks/use-click-outside";
 import { useNote } from "@/hooks/use-note";
 import {
@@ -14,7 +14,6 @@ import { ChevronsRight, TrashIcon } from "lucide-react";
 import { AlertDialogHeader, AlertDialogFooter } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import Wrapper from "@/components/wrapper";
-import { debounce } from "lodash";
 
 export default function DrawerContainer() {
   const divRef = useRef<HTMLDivElement>(null);
@@ -23,46 +22,8 @@ export default function DrawerContainer() {
     redirectPath: `/dashboard`,
   });
 
-  const { currentNote, deleteNote, updateNote } = useNote();
+  const { currentNote, deleteNote, editNoteContent } = useNote();
   const [dialog, setDialog] = useState(false);
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-
-  const debouncedUpdateTitle = useCallback(
-    debounce(async (noteId: string, newTitle: string) => {
-      await updateNote(noteId, { title: newTitle });
-    }, 500),
-    [updateNote],
-  );
-
-  const debouncedUpdateContent = useCallback(
-    // TODO: debounce 좀 이상한데 해결하기
-    debounce(async (noteId: string, newContent: string) => {
-      await updateNote(noteId, { content: newContent });
-    }, 500),
-    [updateNote],
-  );
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setTitle(value);
-    if (currentNote?.id) {
-      debouncedUpdateTitle(currentNote.id, value);
-    }
-  };
-
-  const handleContentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    const value = e.target.value;
-    setContent(value);
-    if (currentNote?.id) {
-      debouncedUpdateContent(currentNote.id, value);
-    }
-  };
-
-  useEffect(() => {
-    setTitle(currentNote?.title || "");
-    setContent(currentNote?.content || "");
-  }, [currentNote]);
 
   const date = new Date(currentNote?.created_at || "").toLocaleDateString("en-US", {
     year: "numeric",
@@ -70,9 +31,9 @@ export default function DrawerContainer() {
     day: "numeric",
   });
 
-  const closeDialog = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-  };
+  useEffect(() => {
+    if (!currentNote) setDialog(false);
+  }, [currentNote]);
 
   return (
     <div
@@ -97,8 +58,8 @@ export default function DrawerContainer() {
             <div className="flex justify-between">
               <input
                 className="text-sb28 text-slate-900 outline-none"
-                defaultValue={title || ""}
-                onChange={handleChange}
+                value={currentNote.title || ""}
+                onChange={async (e) => await editNoteContent(currentNote.id, { title: e.target.value })}
                 placeholder="New Note"
               />
               <AlertDialog open={dialog} onOpenChange={setDialog}>
@@ -116,10 +77,26 @@ export default function DrawerContainer() {
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <Button size="sm" variant="secondary" onClick={closeDialog}>
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setDialog(false);
+                      }}
+                    >
                       Cancel
                     </Button>
-                    <Button size="sm" variant="destructive" onClick={deleteNote}>
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        console.log("deleteNote");
+                        await deleteNote();
+                        setDialog(false);
+                      }}
+                    >
                       Delete
                     </Button>
                   </AlertDialogFooter>
@@ -134,8 +111,8 @@ export default function DrawerContainer() {
           <div className="px-10 pt-8">
             <textarea
               className="text-r16 text-gray-900 resize-none outline-none w-full h-full overflow-hidden"
-              value={content}
-              onChange={handleContentChange}
+              value={currentNote.content}
+              onChange={async (e) => await editNoteContent(currentNote.id, { content: e.target.value })}
               onClick={(e) => e.stopPropagation()}
             />
           </div>

@@ -8,11 +8,21 @@ function Input({
   type,
   label,
   onChange,
+  onEnter,
   ...props
-}: Omit<React.ComponentProps<"input">, "onChange"> & { onChange: (value: string) => void; label?: string }) {
+}: Omit<React.ComponentProps<"input">, "onChange"> & {
+  onChange: (value: string) => void;
+  label?: string;
+  onEnter?: () => void;
+}) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     onChange?.(value);
+  };
+  const handleEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      onEnter?.();
+    }
   };
   return (
     <div className="flex flex-col gap-1 w-full">
@@ -28,6 +38,7 @@ function Input({
         )}
         {...props}
         onChange={handleChange}
+        onKeyDown={handleEnter}
       />
     </div>
   );

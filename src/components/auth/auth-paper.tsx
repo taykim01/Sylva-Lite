@@ -24,8 +24,8 @@ export default function AuthPaper(props: {
         <div className="flex flex-col gap-6 items-center">
           <LogoSymbol />
           <div className="flex flex-col gap-1 text-center items-center">
-            <div className="text-sb22 text-slate-700">{props.title}</div>
-            {props.subtitle && <div className="text-m14 text-slate-600">{props.subtitle}</div>}
+            <div className="text-sb22 text-slate-700 polymath">{props.title}</div>
+            {props.subtitle && <div className="text-m14 text-slate-600 polymath">{props.subtitle}</div>}
           </div>
         </div>
         {props.children}

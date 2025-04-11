@@ -2,8 +2,9 @@
 
 import { useNoteStore } from "@/core/states";
 import { handleCreateEmptyNote, handleDeleteNote, handleGetMyNotes, handleUpdateNote } from "@/features/note-features";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { debounce } from "lodash";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 export function useNote() {
@@ -12,6 +13,7 @@ export function useNote() {
   const { notes, _setNotes, _addNote, _updateNote, _deleteNote } = useNoteStore();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const createNote = async () => {
     setLoading(true);
@@ -39,7 +41,7 @@ export function useNote() {
     }
   };
 
-  const updateNote = async (id: string, updates: Partial<{ title: string; content: string; x: number; y: number }>) => {
+  const moveNote = async (id: string, updates: Partial<{ title: string; content: string; x: number; y: number }>) => {
     setLoading(true);
     try {
       const { data, error } = await handleUpdateNote(id, updates);
@@ -63,9 +65,40 @@ export function useNote() {
       toast("Note deleted successfully");
     } catch (error) {
       setError(error as string);
+      alert(error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const editNoteContent = async (id: string, updates: Partial<{ title: string; content: string }>) => {
+    _updateNote(id, updates);
+    const debouncedUpdateNote = debounce(async (id: string, updates: Partial<{ title: string; content: string }>) => {
+      try {
+        const { error } = await handleUpdateNote(id, updates);
+        if (error) throw error;
+      } catch (error) {
+        setError(error as string);
+      }
+    }, 500);
+    debouncedUpdateNote(id, updates);
+  };
+
+  const debounceUpdate = useRef(
+    debounce(async (id: string, updates: Partial<{ title: string; content: string }>) => {
+      _updateNote(id, updates);
+      try {
+        const { error } = await handleUpdateNote(id, updates);
+        if (error) throw error;
+      } catch (error) {
+        setError(error as string);
+      }
+    }, 300),
+  ).current;
+
+  const selectNote = (id: string) => {
+    if (id === noteId) return;
+    router.push(`/dashboard?note_id=${id}`);
   };
 
   useEffect(() => {
@@ -80,8 +113,11 @@ export function useNote() {
     error,
     createNote,
     readMyNotes,
-    updateNote,
+    moveNote,
     deleteNote,
     currentNote,
+    editNoteContent,
+    selectNote,
+    debounceUpdate,
   };
 }

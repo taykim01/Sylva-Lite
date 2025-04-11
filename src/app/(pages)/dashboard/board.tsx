@@ -12,7 +12,7 @@ import Spinner from "@/components/spinner";
 const nodeTypes = { note: NoteNodeComponent };
 
 function BoardContent() {
-  const { notes, updateNote } = useNote();
+  const { notes, moveNote } = useNote();
   const [nodes, setNodes] = useState<NoteNode[]>([]);
   useEffect(() => {
     const noteNodes =
@@ -41,7 +41,7 @@ function BoardContent() {
   const onNodeDragStop = useCallback(async (e: React.MouseEvent, node: Node<Record<string, unknown>>) => {
     const { position, id } = node;
     const { x, y } = position;
-    await updateNote(id, { x, y });
+    await moveNote(id, { x, y });
   }, []);
 
   return (
@@ -51,6 +51,7 @@ function BoardContent() {
       nodeTypes={nodeTypes}
       onNodeDragStop={onNodeDragStop}
       fitView
+      proOptions={{ hideAttribution: true }}
     />
   );
 }

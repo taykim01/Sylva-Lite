@@ -18,8 +18,15 @@ export default function SignInForm() {
       }}
     >
       <div className="flex flex-col gap-5">
-        <Input placeholder="Enter Email" label="Email" onChange={setEmail} value={email} />
-        <Input placeholder="Enter password" label="Password" type="password" onChange={setPassword} value={password} />
+        <Input placeholder="Enter Email" label="Email" onChange={setEmail} value={email} onEnter={signIn} />
+        <Input
+          placeholder="Enter password"
+          label="Password"
+          type="password"
+          onChange={setPassword}
+          value={password}
+          onEnter={signIn}
+        />
       </div>
     </AuthPaper>
   );
