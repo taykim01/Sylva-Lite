@@ -34,6 +34,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      edge: {
+        Row: {
+          id: string
+          source_handle: string
+          source_note_id: string | null
+          target_handle: string
+          target_note_id: string | null
+        }
+        Insert: {
+          id?: string
+          source_handle: string
+          source_note_id?: string | null
+          target_handle: string
+          target_note_id?: string | null
+        }
+        Update: {
+          id?: string
+          source_handle?: string
+          source_note_id?: string | null
+          target_handle?: string
+          target_note_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "edge_source_note_id_fkey"
+            columns: ["source_note_id"]
+            isOneToOne: false
+            referencedRelation: "note"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "edge_target_note_id_fkey"
+            columns: ["target_note_id"]
+            isOneToOne: false
+            referencedRelation: "note"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       note: {
         Row: {
           content: string

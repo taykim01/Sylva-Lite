@@ -17,7 +17,7 @@ export default function Header() {
   const { signOut } = useAuth();
 
   return (
-    <div className="h-10 py-2 px-4 bg-white flex items-center justify-between">
+    <div className="h-10 py-2 px-4 bg-white flex items-center justify-between border-b border-slate-200">
       <Logo size={48} />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

@@ -92,8 +92,7 @@ export default function DrawerContainer() {
                       variant="destructive"
                       onClick={async (e) => {
                         e.stopPropagation();
-                        console.log("deleteNote");
-                        await deleteNote();
+                        await deleteNote(currentNote.id);
                         setDialog(false);
                       }}
                     >

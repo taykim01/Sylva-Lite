@@ -1,6 +1,5 @@
 import { Tables } from "../../database.types";
 
-// User Store Types
 export interface UserState {
   user: Tables<"user">;
   _setUser: (user: Tables<"user">) => void;
@@ -14,6 +13,15 @@ export interface NoteState {
   _updateNote: (id: string, note: Partial<Tables<"note">>) => void;
   _deleteNote: (id: string) => void;
   _resetNotes: () => void;
+}
+
+export interface EdgeState {
+  edges: Tables<"edge">[];
+  _setEdges: (edges: Tables<"edge">[]) => void;
+  _addEdge: (edge: Tables<"edge">) => void;
+  _updateEdge: (id: string, edge: Partial<Tables<"edge">>) => void;
+  _deleteEdge: (id: string) => void;
+  _resetEdges: () => void;
 }
 
 export interface Response<T> {

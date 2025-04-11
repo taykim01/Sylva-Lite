@@ -54,11 +54,9 @@ export function useNote() {
     }
   };
 
-  const deleteNote = async () => {
+  const deleteNote = async (id: string) => {
     setLoading(true);
     try {
-      const id = currentNote?.id;
-      if (!id) throw new Error("Select a note to delete");
       const { error } = await handleDeleteNote(id);
       if (error) throw error;
       _deleteNote(id);

@@ -8,7 +8,7 @@ import Spinner from "@/components/spinner";
 export default async function Page() {
   return (
     <Suspense fallback={<Spinner />}>
-      <Container className="px-4 py-3 bg-slate-100 relative" teamCard teammateCard>
+      <Container className="relative" teamCard teammateCard>
         <Board />
         <SideDrawer />
         <BottomItems />
