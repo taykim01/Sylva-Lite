@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/infrastructures/supabase/server";
-import { Tables } from "../../database.types";
+import { Tables } from "@/database.types";
 import { handeGetUser } from "./auth-features";
 import { Response } from "@/core/types";
 

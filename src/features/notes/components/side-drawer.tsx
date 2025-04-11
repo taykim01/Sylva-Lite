@@ -13,7 +13,7 @@ import {
 import { ChevronsRight, TrashIcon } from "lucide-react";
 import { AlertDialogHeader, AlertDialogFooter } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import Wrapper from "@/components/wrapper";
+import Wrapper from "./wrapper";
 
 export default function DrawerContainer() {
   const divRef = useRef<HTMLDivElement>(null);

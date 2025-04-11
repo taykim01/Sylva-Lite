@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ReactNode } from "react";
-import { LogoSymbol } from "../logo";
+import { LogoSymbol } from "../common/logo";
 
 export default function AuthPaper(props: {
   title: string;

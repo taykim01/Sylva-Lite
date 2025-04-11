@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Logo } from "../logo";
+import { Logo } from "../common/logo";
 
 export default function AuthContainer(props: { children: ReactNode }) {
   return (

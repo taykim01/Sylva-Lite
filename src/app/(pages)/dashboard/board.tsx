@@ -15,12 +15,12 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { useState, useCallback, useEffect, Suspense } from "react";
-import { Tables } from "../../../../database.types";
+import { Tables } from "@/database.types";
 import { useNote } from "@/hooks/use-note";
 import { useEdge } from "@/hooks/use-edge";
 import { NoteNode } from "@/core/types";
-import NoteNodeComponent from "@/components/note-node";
-import Spinner from "@/components/spinner";
+import NoteNodeComponent from "@/features/notes/components/note-node";
+import Spinner from "@/components/common/spinner";
 
 const nodeTypes = { note: NoteNodeComponent };
 

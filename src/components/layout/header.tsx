@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
-import { Logo } from "@/components/logo";
+import { Logo } from "@/components/common/logo";
 import { useUserStore } from "@/core/states";
 import { useAuth } from "@/hooks/use-auth";
 

@@ -4,7 +4,7 @@ import useEdgeStore from "@/core/states/edge.store";
 import { handleCreateEdge, handleDeleteEdge, handleGetEdges, handleUpdateEdge } from "@/features/edge-features";
 import { Position } from "@xyflow/react";
 import { useEffect, useState } from "react";
-import { Tables } from "../../database.types";
+import { Tables } from "@/database.types";
 
 export function useEdge() {
   const { edges, _setEdges, _addEdge, _updateEdge, _deleteEdge } = useEdgeStore();

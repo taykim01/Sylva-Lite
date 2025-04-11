@@ -1,5 +1,5 @@
 import { NodeProps, Handle, Position, Connection } from "@xyflow/react";
-import { Tables } from "../../database.types";
+import { Tables } from "@/database.types";
 import { useNote } from "@/hooks/use-note";
 import { useEffect, useRef, useState } from "react";
 import { debounce } from "lodash";

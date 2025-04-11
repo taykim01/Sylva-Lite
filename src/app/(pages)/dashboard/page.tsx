@@ -1,9 +1,9 @@
-import Container from "@/components/container";
-import SideDrawer from "@/components/side-drawer";
-import BottomItems from "@/components/bottom-bar";
+import Container from "@/components/layout/container";
+import SideDrawer from "@/features/notes/components/side-drawer";
+import BottomItems from "@/components/layout/bottom-bar";
 import Board from "./board";
 import { Suspense } from "react";
-import Spinner from "@/components/spinner";
+import Spinner from "@/components/common/spinner";
 
 export default async function Page() {
   return (

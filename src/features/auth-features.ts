@@ -2,7 +2,7 @@
 
 import { User } from "./../../node_modules/@supabase/auth-js/dist/module/lib/types.d";
 import { createClient } from "@/infrastructures/supabase/server";
-import { Tables } from "../../database.types";
+import { Tables } from "@/database.types";
 import { Response } from "@/core/types";
 
 export async function handleSignIn(email: string, password: string): Promise<Response<Tables<"user">>> {
