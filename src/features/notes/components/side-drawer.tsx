@@ -57,7 +57,7 @@ export default function DrawerContainer() {
           <div className="px-10 pt-12 border-b border-slate-200">
             <div className="flex justify-between">
               <input
-                className="text-sb28 text-slate-900 outline-none"
+                className="text-sb28 text-slate-900 outline-none polymath"
                 value={currentNote.title || ""}
                 onChange={async (e) => await editNoteContent(currentNote.id, { title: e.target.value })}
                 placeholder="New Note"
