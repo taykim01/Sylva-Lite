@@ -14,6 +14,7 @@ import { ChevronsRight, TrashIcon } from "lucide-react";
 import { AlertDialogHeader, AlertDialogFooter } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import Wrapper from "./wrapper";
+import { TextEditor } from "./text-editor";
 
 export default function DrawerContainer() {
   const divRef = useRef<HTMLDivElement>(null);
@@ -107,13 +108,8 @@ export default function DrawerContainer() {
               <div className="text-slate-700">{date}</div>
             </div>
           </div>
-          <div className="px-10 pt-8">
-            <textarea
-              className="text-r16 text-gray-900 resize-none outline-none w-full h-full overflow-hidden"
-              value={currentNote.content}
-              onChange={async (e) => await editNoteContent(currentNote.id, { content: e.target.value })}
-              onClick={(e) => e.stopPropagation()}
-            />
+          <div className="px-10 pt-8" data-dropdown-menu>
+            <TextEditor noteId={currentNote.id} />
           </div>
         </>
       )}

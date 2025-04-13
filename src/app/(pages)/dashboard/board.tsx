@@ -19,7 +19,7 @@ import { Tables } from "@/database.types";
 import { useNote } from "@/hooks/use-note";
 import { useEdge } from "@/hooks/use-edge";
 import { NoteNode } from "@/core/types";
-import NoteNodeComponent from "@/features/notes/components/note-node";
+import NoteNodeComponent from "@/components/notes/note-node";
 import Spinner from "@/components/common/spinner";
 
 const nodeTypes = { note: NoteNodeComponent };

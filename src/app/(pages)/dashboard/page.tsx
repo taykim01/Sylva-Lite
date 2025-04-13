@@ -1,5 +1,5 @@
 import Container from "@/components/layout/container";
-import SideDrawer from "@/features/notes/components/side-drawer";
+import SideDrawer from "@/components/notes/side-drawer";
 import BottomItems from "@/components/layout/bottom-bar";
 import Board from "./board";
 import { Suspense } from "react";

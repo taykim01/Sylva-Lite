@@ -3,7 +3,6 @@ import { Tables } from "@/database.types";
 import { useNote } from "@/hooks/use-note";
 import { useEffect, useRef, useState } from "react";
 import { debounce } from "lodash";
-import Wrapper from "./wrapper";
 import { Ellipsis } from "lucide-react";
 import {
   DropdownMenu,
@@ -12,29 +11,23 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useEdge } from "@/hooks/use-edge";
+import Wrapper from "./wrapper";
+import { TextEditor } from "./text-editor";
 
 export default function NoteNode({ data }: NodeProps) {
   const note = data as Tables<"note"> & { isConnecting?: boolean };
   const { editNoteContent, selectNote, deleteNote } = useNote();
   const { createEdge } = useEdge();
   const [title, setTitle] = useState(note.title);
-  const [content, setContent] = useState(note.content);
   const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     setTitle(note.title);
-    setContent(note.content);
   }, [note]);
 
   const debounceTitle = useRef(
     debounce(async (newTitle) => {
       await editNoteContent(note.id, { title: newTitle });
-    }, 300),
-  ).current;
-
-  const debounceContent = useRef(
-    debounce(async (newContent) => {
-      await editNoteContent(note.id, { content: newContent });
     }, 300),
   ).current;
 
@@ -70,7 +63,7 @@ export default function NoteNode({ data }: NodeProps) {
       onClick={() => selectNote(note.id)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="flex-shrink-0 w-leaf-sm h-leaf-sm bg-white border-t-4 border-slate-500 flex flex-col gap-8 justify-between p-3 pb-4 cursor-pointer shadow relative"
+      className="flex-shrink-0 w-[240px] h-[240px] bg-white border-t-4 border-slate-500 flex flex-col gap-8 justify-between p-3 pb-4 cursor-pointer shadow relative"
     >
       <Handle
         id="node-right"
@@ -183,16 +176,11 @@ export default function NoteNode({ data }: NodeProps) {
             }}
             onClick={(e) => e.stopPropagation()}
           />
-          <textarea
-            className="text-r16 text-gray-700 resize-none outline-none w-full h-full overflow-hidden"
-            value={content}
-            onChange={(e) => {
-              const newContent = e.target.value;
-              setContent(newContent);
-              debounceContent(newContent);
-            }}
-            onClick={(e) => e.stopPropagation()}
-          />
+          <div className="relative flex-grow">
+            <div className="absolute inset-0 note-content flex-grow overflow-hidden">
+              <TextEditor noteId={note.id} />
+            </div>
+          </div>
         </div>
       </div>
       <div className="text-r12 text-slate-500 flex justify-between">{dateToLocaleString}</div>
