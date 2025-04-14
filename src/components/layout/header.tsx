@@ -7,14 +7,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Download } from "lucide-react";
 import { Logo } from "@/components/common/logo";
 import { useUserStore } from "@/core/states";
 import { useAuth } from "@/hooks/use-auth";
+import { usePWAInstall } from "@/hooks/use-pwa-install";
 
 export default function Header() {
   const { user } = useUserStore();
   const { signOut } = useAuth();
+  const { isInstallable, handleInstallClick } = usePWAInstall();
 
   return (
     <div className="h-10 py-2 px-4 bg-white flex items-center justify-between border-b border-slate-200">
@@ -28,10 +30,13 @@ export default function Header() {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-[180px]">
           <DropdownMenuGroup>
-            <DropdownMenuItem
-              className="p-[10px] flex items-center gap-[6px] text-slate-700 tex-t12r"
-              onClick={signOut}
-            >
+            {isInstallable && (
+              <DropdownMenuItem onClick={handleInstallClick}>
+                <Download size={16} />
+                Install App
+              </DropdownMenuItem>
+            )}
+            <DropdownMenuItem onClick={signOut}>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <path
                   fillRule="evenodd"
