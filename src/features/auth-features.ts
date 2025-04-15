@@ -57,7 +57,7 @@ export async function handleSignOut(): Promise<Response<void>> {
   return { data: null, error: null };
 }
 
-export async function handeGetUser(): Promise<Response<User>> {
+export async function handleGetUser(): Promise<Response<User>> {
   const supabase = await createClient();
   const { data: user } = await supabase.auth.getUser();
   const userData = user?.user;

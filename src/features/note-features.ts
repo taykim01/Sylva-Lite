@@ -2,12 +2,12 @@
 
 import { createClient } from "@/infrastructures/supabase/server";
 import { Tables } from "@/database.types";
-import { handeGetUser } from "./auth-features";
+import { handleGetUser } from "./auth-features";
 import { Response } from "@/core/types";
 
 export async function handleCreateEmptyNote(): Promise<Response<Tables<"note">>> {
   const supabase = await createClient();
-  const { data, error } = await handeGetUser();
+  const { data, error } = await handleGetUser();
   if (error) throw new Error(error);
   const newNote: Omit<Tables<"note">, "id" | "created_at"> = {
     creator_id: data!.id,
@@ -23,7 +23,7 @@ export async function handleCreateEmptyNote(): Promise<Response<Tables<"note">>>
 
 export async function handleGetMyNotes(): Promise<Response<Tables<"note">[]>> {
   const supabase = await createClient();
-  const { data, error } = await handeGetUser();
+  const { data, error } = await handleGetUser();
   if (error) throw new Error(error);
   const { data: notes, error: notesError } = await supabase.from("note").select("*").eq("creator_id", data!.id);
   if (notesError) throw new Error(notesError.message);
