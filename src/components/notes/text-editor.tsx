@@ -113,8 +113,19 @@ const SlashCommands = Extension.create({
 
           return {
             onStart: (props: SuggestionProps) => {
+              const editorElement = props.editor.view.dom;
+              const editorId = editorElement.getAttribute("data-editor-id");
+
+              document.querySelectorAll("[data-slash-command]").forEach((el) => {
+                if (el.getAttribute("data-editor-id") !== editorId) {
+                  (el as any)._tippy?.hide();
+                }
+              });
+
               component = document.createElement("div");
               component.className = "slash-menu";
+              component.setAttribute("data-slash-command", "");
+              component.setAttribute("data-editor-id", editorId || "");
 
               slashCommands.forEach((item) => {
                 const menuItem = document.createElement("div");
@@ -148,8 +159,8 @@ const SlashCommands = Extension.create({
                 placement: "bottom-start",
                 theme: "light",
                 onCreate: (instance) => {
-                  // Add data-dropdown-menu attribute to the tippy box
                   instance.popper.setAttribute("data-dropdown-menu", "");
+                  instance.popper.setAttribute("data-editor-id", editorId || "");
                 },
               });
             },
@@ -187,24 +198,19 @@ const SlashCommands = Extension.create({
 
 interface TextEditorProps {
   noteId: string;
+  editorId?: string;
 }
 
-export function TextEditor({ noteId }: TextEditorProps) {
-  const { editNoteContent, notes } = useNote();
+export function TextEditor({ noteId, editorId }: TextEditorProps) {
+  const { notes, selectiveDebounce } = useNote();
   const note = notes.find((note) => note.id === noteId);
-
-  const debounceContent = useRef(
-    debounce(async (newContent) => {
-      await editNoteContent(noteId, { content: newContent });
-    }, 300),
-  ).current;
 
   const editor = useEditor({
     extensions: [StarterKit, Color.configure({ types: [TextStyle.name, ListItem.name] }), TextStyle, SlashCommands],
     content: note?.content,
     onUpdate: ({ editor }) => {
       const content = editor.getHTML();
-      debounceContent(content);
+      selectiveDebounce(noteId, { content });
     },
   });
 
@@ -215,7 +221,7 @@ export function TextEditor({ noteId }: TextEditorProps) {
   }, [note?.content, editor]);
 
   return (
-    <div className="notion-style-editor" data-dropdown-menu>
+    <div className="notion-style-editor" data-dropdown-menu data-editor-id={editorId}>
       <EditorContent editor={editor} className="prose max-w-none focus:outline-none" />
     </div>
   );

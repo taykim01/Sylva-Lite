@@ -164,7 +164,7 @@ export default function NoteNode({ data }: NodeProps) {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <div className="flex flex-col gap-3 h-full">
+        <div className="flex flex-col gap-3 h-full nowheel overflow-scroll">
           <input
             className="text-m18 text-slate-800 outline-none w-full polymath"
             placeholder="New Note"
@@ -176,10 +176,8 @@ export default function NoteNode({ data }: NodeProps) {
             }}
             onClick={(e) => e.stopPropagation()}
           />
-          <div className="relative flex-grow">
-            <div className="absolute inset-0 note-content flex-grow overflow-hidden">
-              <TextEditor noteId={note.id} />
-            </div>
+          <div className="note-content flex-grow">
+            <TextEditor noteId={note.id} editorId={`note-node-editor-${note.id}`} />
           </div>
         </div>
       </div>

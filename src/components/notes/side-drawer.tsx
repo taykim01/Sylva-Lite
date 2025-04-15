@@ -109,7 +109,7 @@ export default function DrawerContainer() {
             </div>
           </div>
           <div className="px-10 pt-8" data-dropdown-menu>
-            <TextEditor noteId={currentNote.id} />
+            <TextEditor noteId={currentNote.id} editorId="side-drawer-editor" />
           </div>
         </>
       )}

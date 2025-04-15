@@ -94,6 +94,11 @@ export function useNote() {
     }, 300),
   ).current;
 
+  const selectiveDebounce = (id: string, updates: Partial<{ title: string; content: string }>) => {
+    _updateNote(id, updates);
+    debounceUpdate(id, updates);
+  };
+
   const selectNote = (id: string) => {
     if (id === noteId) return;
     router.push(`/dashboard?note_id=${id}`);
@@ -117,5 +122,6 @@ export function useNote() {
     editNoteContent,
     selectNote,
     debounceUpdate,
+    selectiveDebounce,
   };
 }
