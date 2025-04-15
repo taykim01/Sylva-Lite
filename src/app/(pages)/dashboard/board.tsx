@@ -111,23 +111,25 @@ function BoardContent() {
   );
 
   return (
-    <ReactFlow
-      style={{
-        backgroundColor: "#FAFAFA",
-      }}
-      nodes={nodes}
-      onNodesChange={onNodesChange}
-      nodeTypes={nodeTypes}
-      edges={flowEdges}
-      onEdgesChange={onEdgesChange}
-      onConnect={onConnect}
-      onConnectStart={onConnectStart}
-      onConnectEnd={onConnectEnd}
-      onNodeDragStop={onNodeDragStop}
-      defaultEdgeOptions={defaultEdgeOptions}
-      fitView
-      proOptions={{ hideAttribution: true }}
-    />
+    <div className="hidden sm:block w-full h-full">
+      <ReactFlow
+        style={{
+          backgroundColor: "#FAFAFA",
+        }}
+        nodes={nodes}
+        onNodesChange={onNodesChange}
+        nodeTypes={nodeTypes}
+        edges={flowEdges}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        onConnectStart={onConnectStart}
+        onConnectEnd={onConnectEnd}
+        onNodeDragStop={onNodeDragStop}
+        defaultEdgeOptions={defaultEdgeOptions}
+        fitView
+        proOptions={{ hideAttribution: true }}
+      />
+    </div>
   );
 }
 

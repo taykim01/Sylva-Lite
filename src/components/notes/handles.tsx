@@ -44,6 +44,7 @@ export function Handles({ note, isHovered, createEdge }: HandlesProps) {
           ...handleStyle,
           right: "-4px",
         }}
+        className="hidden sm:block"
       />
       <Handle
         id="node-left"
@@ -54,6 +55,7 @@ export function Handles({ note, isHovered, createEdge }: HandlesProps) {
           ...handleStyle,
           left: "-4px",
         }}
+        className="hidden sm:block"
       />
       <Handle
         id="node-top"
@@ -64,6 +66,7 @@ export function Handles({ note, isHovered, createEdge }: HandlesProps) {
           ...handleStyle,
           top: "-4px",
         }}
+        className="hidden sm:block"
       />
       <Handle
         id="node-bottom"
@@ -74,6 +77,7 @@ export function Handles({ note, isHovered, createEdge }: HandlesProps) {
           ...handleStyle,
           bottom: "-4px",
         }}
+        className="hidden sm:block"
       />
 
       {/* Target Handles */}
@@ -86,6 +90,7 @@ export function Handles({ note, isHovered, createEdge }: HandlesProps) {
           ...targetHandleStyle,
           right: "-4px",
         }}
+        className="hidden sm:block"
       />
       <Handle
         id="node-target-left"
@@ -96,6 +101,7 @@ export function Handles({ note, isHovered, createEdge }: HandlesProps) {
           ...targetHandleStyle,
           left: "-4px",
         }}
+        className="hidden sm:block"
       />
       <Handle
         id="node-target-top"
@@ -106,6 +112,7 @@ export function Handles({ note, isHovered, createEdge }: HandlesProps) {
           ...targetHandleStyle,
           top: "-4px",
         }}
+        className="hidden sm:block"
       />
       <Handle
         id="node-target-bottom"
@@ -116,6 +123,7 @@ export function Handles({ note, isHovered, createEdge }: HandlesProps) {
           ...targetHandleStyle,
           bottom: "-4px",
         }}
+        className="hidden sm:block"
       />
     </>
   );

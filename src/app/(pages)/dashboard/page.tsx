@@ -6,6 +6,7 @@ import { Suspense } from "react";
 import Spinner from "@/components/common/spinner";
 import { handleGetUser } from "@/features/auth-features";
 import { redirect } from "next/navigation";
+import List from "./list";
 
 export default async function Page() {
   const { data: user } = await handleGetUser();
@@ -13,11 +14,14 @@ export default async function Page() {
 
   return (
     <Suspense fallback={<Spinner />}>
-      <Container className="relative" teamCard teammateCard>
-        <Board />
-        <SideDrawer />
-        <BottomItems />
-      </Container>
+      <div className="relative">
+        <Container className="relative" teamCard teammateCard>
+          <Board />
+          <List />
+          <SideDrawer />
+          <BottomItems />
+        </Container>
+      </div>
     </Suspense>
   );
 }
