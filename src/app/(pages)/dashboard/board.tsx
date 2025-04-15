@@ -25,8 +25,7 @@ import Spinner from "@/components/common/spinner";
 const nodeTypes = { note: NoteNodeComponent };
 
 const defaultEdgeOptions = {
-  style: { strokeWidth: 1, stroke: "#D0D5DD" },
-  type: "smoothstep",
+  style: { strokeWidth: 1.5, stroke: "#D0D5DD" },
 };
 
 function BoardContent() {

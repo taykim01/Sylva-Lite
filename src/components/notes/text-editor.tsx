@@ -13,8 +13,7 @@ import tippy from "tippy.js";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/themes/light.css";
 import { useNote } from "@/hooks/use-note";
-import { debounce } from "lodash";
-import { useRef, useEffect } from "react";
+import { useEffect } from "react";
 
 interface SlashCommand {
   title: string;
@@ -118,6 +117,7 @@ const SlashCommands = Extension.create({
 
               document.querySelectorAll("[data-slash-command]").forEach((el) => {
                 if (el.getAttribute("data-editor-id") !== editorId) {
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   (el as any)._tippy?.hide();
                 }
               });
@@ -203,11 +203,11 @@ interface TextEditorProps {
 
 export function TextEditor({ noteId, editorId }: TextEditorProps) {
   const { notes, selectiveDebounce } = useNote();
-  const note = notes.find((note) => note.id === noteId);
-
+  const currentNote = notes?.find((note) => note.id === noteId);
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [StarterKit, Color.configure({ types: [TextStyle.name, ListItem.name] }), TextStyle, SlashCommands],
-    content: note?.content,
+    content: currentNote?.content,
     onUpdate: ({ editor }) => {
       const content = editor.getHTML();
       selectiveDebounce(noteId, { content });
@@ -215,10 +215,10 @@ export function TextEditor({ noteId, editorId }: TextEditorProps) {
   });
 
   useEffect(() => {
-    if (editor && note?.content !== editor.getHTML()) {
-      editor.commands.setContent(note?.content || "");
+    if (editor && currentNote?.content !== editor.getHTML()) {
+      editor.commands.setContent(currentNote?.content || "");
     }
-  }, [note?.content, editor]);
+  }, [currentNote?.content, editor]);
 
   return (
     <div className="notion-style-editor" data-dropdown-menu data-editor-id={editorId}>

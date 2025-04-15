@@ -42,9 +42,17 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
+  --text-b32: 32px;
+  --text-b32--line-height: 1.38;
+  --text-b32--font-weight: 700;
+
   --text-sb28: 28px;
   --text-sb28--line-height: 1.38;
-  --text-sb28--font-weight: 500;
+  --text-sb28--font-weight: 600;
+
+  --text-b18: 18px;
+  --text-b18--line-height: 1.38;
+  --text-b18--font-weight: 700;
 
   --text-m18: 18px;
   --text-m18--line-height: 1.38;

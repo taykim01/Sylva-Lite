@@ -41,10 +41,9 @@ export default function DrawerContainer() {
       ref={divRef}
       className={`fixed right-0 bg-white border-t-8 border-slate-500
       ${currentNote ? "translate-x-0" : "translate-x-full"}
-      top-0 transition-all duration-500 bottom-0 w-1/2 max-w-[720px] flex flex-col`}
+      top-0 transition-all duration-500 bottom-0 w-1/2 max-w-[720px] flex flex-col shadow-lg`}
       style={{
         zIndex: 50,
-        boxShadow: "-4px 0px 8px 0px #DADADA",
         visibility: currentNote ? "visible" : "hidden",
       }}
     >
@@ -58,7 +57,7 @@ export default function DrawerContainer() {
           <div className="px-10 pt-12 border-b border-slate-200">
             <div className="flex justify-between">
               <input
-                className="text-sb28 text-slate-900 outline-none polymath"
+                className="text-b32 text-slate-900 outline-none polymath"
                 value={currentNote.title || ""}
                 onChange={async (e) => await editNoteContent(currentNote.id, { title: e.target.value })}
                 placeholder="New Note"

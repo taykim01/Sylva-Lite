@@ -100,8 +100,16 @@ export function useNote() {
   };
 
   const selectNote = (id: string) => {
+    const prevNoteId = noteId;
     if (id === noteId) return;
-    router.push(`/dashboard?note_id=${id}`);
+    if (prevNoteId) {
+      router.push("/dashboard");
+      setTimeout(() => {
+        router.push(`/dashboard?note_id=${id}`);
+      }, 500);
+    } else {
+      router.push(`/dashboard?note_id=${id}`);
+    }
   };
 
   useEffect(() => {
