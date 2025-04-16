@@ -7,6 +7,11 @@ import { ReactNode } from "react";
 export const metadata: Metadata = {
   title: "Sylva Lite",
   description: "Personal Bulletin Board",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    title: "Sylva Lite",
+  },
 };
 
 const pretendard = localFont({
@@ -26,6 +31,7 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://use.typekit.net/yyc5pbu.css" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black" />
         <meta name="apple-mobile-web-app-title" content="Sylva Lite" />
         <link rel="manifest" href="/manifest.json" />
@@ -33,6 +39,7 @@ export default function RootLayout({
         <link rel="icon" href="/icons/icon-512x512.png" sizes="512x512" />
         <meta name="theme-color" content="#A1A8B4" />
         <meta name="application-name" content="Sylva Lite" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
       </head>
       <body className={pretendard.variable}>
         {children} <Toaster position="bottom-left" />
