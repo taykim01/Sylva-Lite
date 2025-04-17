@@ -111,10 +111,12 @@ function BoardContent() {
   );
 
   return (
-    <div className="hidden sm:block w-full h-full">
+    <div style={{ width: "100%", height: "100vh" }}>
       <ReactFlow
         style={{
           backgroundColor: "#FAFAFA",
+          width: "100%",
+          height: "100%",
         }}
         nodes={nodes}
         onNodesChange={onNodesChange}
@@ -134,6 +136,9 @@ function BoardContent() {
 }
 
 export default function Board() {
+  const { viewMode } = useNote();
+  if (viewMode === "list") return;
+
   return (
     <Suspense fallback={<Spinner />}>
       <BoardContent />

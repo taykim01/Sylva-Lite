@@ -6,7 +6,9 @@ const useNoteStore = create<NoteState>()(
   persist(
     (set) => ({
       notes: [],
+      viewMode: "board",
       _setNotes: (notes) => set({ notes: notes }),
+      _setViewMode: (viewMode) => set({ viewMode }),
       _addNote: (note) => set((state) => ({ notes: [...state.notes, note] })),
       _updateNote: (id, note) =>
         set((state) => ({

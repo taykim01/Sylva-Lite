@@ -4,10 +4,14 @@ import Note from "@/components/notes/note";
 import { useNote } from "@/hooks/use-note";
 
 export default function List() {
-  const { notes } = useNote();
+  const { notes, viewMode } = useNote();
+  if (viewMode === "board") return;
 
   return (
-    <div className="flex sm:hidden flex-col gap-2 p-5">
+    <div
+      className="flex sm:flex-wrap flex-col sm:flex-row sm:items-start gap-2 sm:gap-5 p-5 overflow-y-auto h-full sm:h-fit w-full"
+      style={{ backgroundColor: "#FAFAFA" }}
+    >
       {notes?.map((note) => (
         <Note key={note.id} {...note} />
       ))}

@@ -9,17 +9,19 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown, Download } from "lucide-react";
 import { Logo } from "@/components/common/logo";
-import { useUserStore } from "@/core/states";
 import { useAuth } from "@/hooks/use-auth";
 import { usePWAInstall } from "@/hooks/use-pwa-install";
+import { Switch } from "../ui/switch";
+import { Label } from "../ui/label";
+import { useNote } from "@/hooks/use-note";
 
 export default function Header() {
-  const { user } = useUserStore();
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
   const { isInstallable, handleInstallClick } = usePWAInstall();
+  const { toggleViewMode, viewMode } = useNote();
 
   return (
-    <div className="h-10 py-2 px-4 bg-white flex items-center justify-between border-b border-slate-200">
+    <div className="h-10 py-2 px-4 bg-white flex items-center justify-between border-b border-slate-200 sticky top-0 z-10">
       <Logo size={48} />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -30,6 +32,10 @@ export default function Header() {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-[180px]">
           <DropdownMenuGroup>
+            <DropdownMenuItem onClick={(e) => e.preventDefault()}>
+              <Switch id="view-mode" checked={viewMode === "board"} onCheckedChange={toggleViewMode} />
+              <Label htmlFor="view-mode">Board View</Label>
+            </DropdownMenuItem>
             {isInstallable && (
               <DropdownMenuItem onClick={handleInstallClick}>
                 <Download size={16} />

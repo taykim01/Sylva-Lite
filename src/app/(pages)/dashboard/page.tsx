@@ -14,14 +14,12 @@ export default async function Page() {
 
   return (
     <Suspense fallback={<Spinner />}>
-      <div className="relative">
-        <Container className="relative" teamCard teammateCard>
-          <Board />
-          <List />
-          <SideDrawer />
-          <BottomItems />
-        </Container>
-      </div>
+      <Container className="relative">
+        <Board />
+        <List />
+        <SideDrawer />
+        <BottomItems />
+      </Container>
     </Suspense>
   );
 }

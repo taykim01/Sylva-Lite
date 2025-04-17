@@ -8,7 +8,9 @@ export interface UserState {
 
 export interface NoteState {
   notes: Tables<"note">[];
+  viewMode: "board" | "list";
   _setNotes: (notes: Tables<"note">[]) => void;
+  _setViewMode: (viewMode: "board" | "list") => void;
   _addNote: (note: Tables<"note">) => void;
   _updateNote: (id: string, note: Partial<Tables<"note">>) => void;
   _deleteNote: (id: string) => void;

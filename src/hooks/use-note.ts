@@ -10,7 +10,7 @@ import { toast } from "sonner";
 export function useNote() {
   const searchParams = useSearchParams();
   const noteId = searchParams.get("note_id") as string | undefined;
-  const { notes, _setNotes, _addNote, _updateNote, _deleteNote } = useNoteStore();
+  const { notes, viewMode, _setNotes, _addNote, _updateNote, _deleteNote, _setViewMode } = useNoteStore();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -118,8 +118,12 @@ export function useNote() {
 
   const currentNote = notes?.find((note) => note.id === noteId);
 
+  const toggleViewMode = () => {
+    _setViewMode(viewMode === "board" ? "list" : "board");
+  };
+
   return {
-    notes,
+    notes: notes?.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()),
     loading,
     error,
     createNote,
@@ -131,5 +135,7 @@ export function useNote() {
     selectNote,
     debounceUpdate,
     selectiveDebounce,
+    toggleViewMode,
+    viewMode,
   };
 }
