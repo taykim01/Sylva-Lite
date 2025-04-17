@@ -8,10 +8,7 @@ export default function List() {
   if (viewMode === "board") return;
 
   return (
-    <div
-      className="flex sm:flex-wrap flex-col sm:flex-row sm:items-start gap-2 sm:gap-5 p-5 overflow-y-auto h-full sm:h-fit w-full"
-      style={{ backgroundColor: "#FAFAFA" }}
-    >
+    <div className="absolute inset-0 flex sm:flex-wrap flex-col sm:flex-row sm:items-start gap-2 sm:gap-5 content-start p-5 overflow-y-auto bg-gray-50">
       {notes?.map((note) => (
         <Note key={note.id} {...note} />
       ))}

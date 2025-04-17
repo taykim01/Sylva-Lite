@@ -61,6 +61,13 @@ const slashCommands: SlashCommand[] = [
     icon: "1.",
   },
   {
+    title: "Task List",
+    command: ({ editor, range }: CommandProps) => {
+      editor.chain().focus().deleteRange(range).toggleTaskList().run();
+    },
+    icon: "☐",
+  },
+  {
     title: "Code Block",
     command: ({ editor, range }: CommandProps) => {
       editor.chain().focus().deleteRange(range).toggleCodeBlock().run();
@@ -73,6 +80,61 @@ const slashCommands: SlashCommand[] = [
       editor.chain().focus().deleteRange(range).toggleBlockquote().run();
     },
     icon: "❝",
+  },
+  {
+    title: "Table",
+    command: ({ editor, range }: CommandProps) => {
+      editor.chain().focus().deleteRange(range).insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run();
+    },
+    icon: "⊞",
+  },
+  {
+    title: "Horizontal Rule",
+    command: ({ editor, range }: CommandProps) => {
+      editor.chain().focus().deleteRange(range).setHorizontalRule().run();
+    },
+    icon: "—",
+  },
+  {
+    title: "Image",
+    command: ({ editor, range }: CommandProps) => {
+      const url = window.prompt("Enter image URL");
+      if (url) {
+        editor.chain().focus().deleteRange(range).setImage({ src: url }).run();
+      }
+    },
+    icon: "🖼️",
+  },
+  {
+    title: "Link",
+    command: ({ editor, range }: CommandProps) => {
+      const url = window.prompt("Enter URL");
+      if (url) {
+        editor.chain().focus().deleteRange(range).setLink({ href: url }).run();
+      }
+    },
+    icon: "🔗",
+  },
+  {
+    title: "Highlight",
+    command: ({ editor, range }: CommandProps) => {
+      editor.chain().focus().deleteRange(range).toggleHighlight().run();
+    },
+    icon: "🖍️",
+  },
+  {
+    title: "Strikethrough",
+    command: ({ editor, range }: CommandProps) => {
+      editor.chain().focus().deleteRange(range).toggleStrike().run();
+    },
+    icon: "~~",
+  },
+  {
+    title: "Divider",
+    command: ({ editor, range }: CommandProps) => {
+      editor.chain().focus().deleteRange(range).setHorizontalRule().run();
+    },
+    icon: "≡",
   },
 ];
 
@@ -104,7 +166,9 @@ const SlashCommands = Extension.create({
             onStart: (props: SuggestionProps) => {
               const editorElement = props.editor.view.dom;
               const editorId = editorElement.getAttribute("data-editor-id");
-              if (editorId !== "side-drawer") return;
+              const isDrawerOpen = editorElement.getAttribute("data-is-drawer-open");
+              console.log(editorId, isDrawerOpen);
+              if (editorId === "note" && isDrawerOpen === "true") return;
               component = document.createElement("div");
               component.className = "slash-menu";
               component.setAttribute("data-slash-command", "");
@@ -126,7 +190,7 @@ const SlashCommands = Extension.create({
                 menuItem.addEventListener("click", (e) => {
                   e.stopPropagation();
                   item.command(props);
-                  popup[0].hide();
+                  popup?.[0]?.hide();
                 });
 
                 component.appendChild(menuItem);

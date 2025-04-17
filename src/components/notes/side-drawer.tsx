@@ -126,7 +126,7 @@ export default function DrawerContainer() {
               <div className="text-slate-700">{date}</div>
             </div>
           </div>
-          <div className="px-5 sm:px-10 pt-5 sm:pt-8" data-dropdown-menu>
+          <div className="px-5 sm:px-10 pt-5 h-full my-8 overflow-scroll" data-dropdown-menu>
             <TextEditor noteId={currentNote.id} isSideDrawer />
           </div>
         </>
