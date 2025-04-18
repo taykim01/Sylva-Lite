@@ -47,6 +47,13 @@ const slashCommands: SlashCommand[] = [
     icon: "H2",
   },
   {
+    title: "Heading 3",
+    command: ({ editor, range }: CommandProps) => {
+      editor.chain().focus().deleteRange(range).setHeading({ level: 3 }).run();
+    },
+    icon: "H3",
+  },
+  {
     title: "Bullet List",
     command: ({ editor, range }: CommandProps) => {
       editor.chain().focus().deleteRange(range).toggleBulletList().run();

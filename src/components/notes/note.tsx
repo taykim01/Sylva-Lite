@@ -1,6 +1,6 @@
 import { Tables } from "@/database.types";
 import { useNote } from "@/hooks/use-note";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Ellipsis } from "lucide-react";
 import {
   DropdownMenu,
@@ -13,8 +13,9 @@ import Wrapper from "./wrapper";
 import { TextEditor } from "./text-editor";
 import { Handles } from "./handles";
 import { useSearchParams } from "next/navigation";
+
 export default function Note(props: Tables<"note"> & { handle?: boolean }) {
-  const { selectNote, deleteNote, selectiveDebounce } = useNote();
+  const { selectNote, deleteNote, debounceUpdate } = useNote();
   const { createEdge } = useEdge();
   const [isHovered, setIsHovered] = useState(false);
   const [noteSelected, setNoteSelected] = useState(false);
@@ -46,6 +47,16 @@ export default function Note(props: Tables<"note"> & { handle?: boolean }) {
     }
   }, [noteId]);
 
+  const [title, setTitle] = useState(props?.title);
+  const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const newTitle = e.target.value;
+    setTitle(newTitle);
+    debounceUpdate(props.id, { title: newTitle });
+  };
+  useEffect(() => {
+    setTitle(props?.title);
+  }, [props?.title]);
+
   return (
     <>
       <div
@@ -76,11 +87,8 @@ export default function Note(props: Tables<"note"> & { handle?: boolean }) {
             <input
               className="text-b18 text-slate-800 outline-none w-full polymath"
               placeholder="New Note"
-              value={props?.title}
-              onChange={(e) => {
-                const newTitle = e.target.value;
-                selectiveDebounce(props.id, { title: newTitle });
-              }}
+              value={title}
+              onChange={handleTitleChange}
               onClick={(e) => e.stopPropagation()}
             />
             <div className="flex-grow relative">

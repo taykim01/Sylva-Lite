@@ -22,7 +22,7 @@ import { useEffect } from "react";
 import SlashCommands from "./slash-commands";
 
 export function TextEditor(props: { noteId: string; isSideDrawer?: boolean }) {
-  const { notes, selectiveDebounce, currentNote } = useNote();
+  const { notes, debounceUpdate, currentNote } = useNote();
   const note = notes?.find((note) => note.id === props.noteId);
   const editor = useEditor({
     immediatelyRender: false,
@@ -54,7 +54,7 @@ export function TextEditor(props: { noteId: string; isSideDrawer?: boolean }) {
     content: note?.content,
     onUpdate: ({ editor }) => {
       const content = editor.getHTML();
-      selectiveDebounce(props.noteId, { content });
+      debounceUpdate(props.noteId, { content });
     },
   });
 
@@ -76,7 +76,7 @@ export function TextEditor(props: { noteId: string; isSideDrawer?: boolean }) {
     <div className="notion-style-editor" data-dropdown-menu>
       <EditorContent
         editor={editor}
-        className="prose max-w-none focus:outline-none cursor-text"
+        className="prose max-w-none focus:outline-none cursor-text h-full"
         onClick={(e) => e.stopPropagation()}
       />
     </div>

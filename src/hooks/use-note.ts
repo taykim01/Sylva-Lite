@@ -94,11 +94,6 @@ export function useNote() {
     }, 300),
   ).current;
 
-  const selectiveDebounce = (id: string, updates: Partial<{ title: string; content: string }>) => {
-    _updateNote(id, updates);
-    debounceUpdate(id, updates);
-  };
-
   const selectNote = (id: string) => {
     const prevNoteId = noteId;
     if (id === noteId) return;
@@ -134,7 +129,6 @@ export function useNote() {
     editNoteContent,
     selectNote,
     debounceUpdate,
-    selectiveDebounce,
     toggleViewMode,
     viewMode,
   };
