@@ -2,8 +2,8 @@
 
 import { User } from "./../../node_modules/@supabase/auth-js/dist/module/lib/types.d";
 import { createClient } from "@/infrastructures/supabase/server";
-import { Tables } from "@/database.types";
 import { Response } from "@/core/types";
+import { Tables } from "@/database.types";
 
 export async function handleSignIn(email: string, password: string): Promise<Response<Tables<"user">>> {
   const supabase = await createClient();
@@ -44,6 +44,7 @@ export async function handleSignUp(email: string, password: string): Promise<Res
   const newUser: Omit<Tables<"user">, "created_at"> = {
     id: userID,
     email,
+    push_subscription: null,
   };
   const { data: createdUser, error: userError } = await supabase.from("user").insert(newUser).select("*").single();
   if (userError) return { data: null, error: userError.message };
