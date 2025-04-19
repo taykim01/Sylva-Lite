@@ -3,6 +3,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import localFont from "next/font/local";
 import { ReactNode } from "react";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 export const metadata: Metadata = {
   title: "Sylva Board",
@@ -58,6 +59,7 @@ export default function RootLayout({
       </head>
       <body className={pretendard.variable}>
         {children} <Toaster position="bottom-left" />
+        <GoogleAnalytics gaId="G-H61KJZWJK3" />
       </body>
     </html>
   );
