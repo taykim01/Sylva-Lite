@@ -12,6 +12,19 @@ export const metadata: Metadata = {
     capable: true,
     title: "Sylva Board",
   },
+  openGraph: {
+    title: "Sylva Board",
+    description: "Personal Bulletin Board",
+    url: "https://www.sylva.my",
+    siteName: "Sylva Board",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Sylva Board",
+    description: "Personal Bulletin Board",
+  },
 };
 
 const pretendard = localFont({
@@ -40,6 +53,8 @@ export default function RootLayout({
         <meta name="theme-color" content="#A1A8B4" />
         <meta name="application-name" content="Sylva Board" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+        <meta name="google-site-verification" content="yV3pV-49ogOKGIMLBfZbsY0y5vaJaF0oSOWSe1zVvBs" />
+        <meta name="naver-site-verification" content="35ef34718a2f289d1ac5296c2e8837ddc55b4451" />
       </head>
       <body className={pretendard.variable}>
         {children} <Toaster position="bottom-left" />
