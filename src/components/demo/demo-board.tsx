@@ -81,8 +81,6 @@ function BoardContent() {
   const onEdgesChange = useCallback(
     (changes: EdgeChange[]) => {
       setFlowEdges((eds) => applyEdgeChanges(changes, eds));
-
-      // Handle edge deletion
       changes.forEach((change) => {
         if (change.type === "remove") {
           deleteEdge(change.id);
@@ -109,7 +107,7 @@ function BoardContent() {
   );
 
   return (
-    <div style={{ width: "100%", height: "100vh" }}>
+    <div style={{ width: "100%" }} className="h-[calc(100vh-40px)]">
       <ReactFlow
         style={{
           backgroundColor: "#FAFAFA",

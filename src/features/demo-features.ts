@@ -11,8 +11,8 @@ export async function handleDemoSignIn() {
     email: "demo@sylva.com",
     password: "qwer1234",
   });
-  if (error) throw new Error(error.message);
-  return { data: data, error: null };
+  if (error) return { data: null, error: error.message };
+  return { data, error: null };
 }
 
 export async function handleDemoCreateEmptyNote(): Promise<Response<Tables<"note">>> {
@@ -25,7 +25,7 @@ export async function handleDemoCreateEmptyNote(): Promise<Response<Tables<"note
     y: 0,
   };
   const { data: createdNote, error: noteError } = await supabase.from("note").insert(newNote).select("*").single();
-  if (noteError) throw new Error(noteError.message);
+  if (noteError) return { data: null, error: noteError.message };
   return { data: createdNote as Tables<"note">, error: null };
 }
 
@@ -35,7 +35,7 @@ export async function handleDemoGetMyNotes(): Promise<Response<Tables<"note">[]>
     .from("note")
     .select("*")
     .eq("creator_id", process.env.NEXT_PUBLIC_DEMO_ID!);
-  if (notesError) throw new Error(notesError.message);
+  if (notesError) return { data: null, error: notesError.message };
   return { data: notes as Tables<"note">[], error: null };
 }
 
@@ -55,7 +55,7 @@ export async function handleDemoUpdateNote(
     .eq("id", id)
     .select("*")
     .single();
-  if (noteError) throw new Error(noteError.message);
+  if (noteError) return { data: null, error: noteError.message };
   return { data: updatedNote as Tables<"note">, error: null };
 }
 
@@ -67,7 +67,7 @@ export async function handleDemoDeleteNote(id: string): Promise<Response<Tables<
     .eq("id", id)
     .select("*")
     .single();
-  if (noteError) throw new Error(noteError.message);
+  if (noteError) return { data: null, error: noteError.message };
   return { data: deletedNote as Tables<"note">, error: null };
 }
 

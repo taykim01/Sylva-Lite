@@ -5,11 +5,9 @@ import { DemoList } from "../../../components/demo/demo-list";
 import { DemoBottomBar } from "../../../components/demo/demo-bottom-bar";
 import { DemoSideDrawer } from "../../../components/demo/demo-side-drawer";
 import { DemoContainer } from "@/components/demo/demo-container";
-import { handleDemoSignIn } from "@/features/demo-features";
+import { DemoStart } from "@/components/demo/demo-start";
 
-export default async function Page() {
-  const {} = await handleDemoSignIn();
-
+export default function Page() {
   return (
     <Suspense fallback={<Spinner />}>
       <DemoContainer className="relative">
@@ -18,6 +16,7 @@ export default async function Page() {
         <DemoSideDrawer />
         <DemoBottomBar />
       </DemoContainer>
+      <DemoStart />
     </Suspense>
   );
 }

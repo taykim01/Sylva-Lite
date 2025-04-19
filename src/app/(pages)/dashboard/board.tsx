@@ -111,7 +111,7 @@ function BoardContent() {
   );
 
   return (
-    <div style={{ width: "100%", height: "100vh" }}>
+    <div style={{ width: "100%" }} className="h-[calc(100vh-40px)]">
       <ReactFlow
         style={{
           backgroundColor: "#FAFAFA",
