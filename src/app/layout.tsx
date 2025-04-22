@@ -59,7 +59,7 @@ export default function RootLayout({
       </head>
       <body className={pretendard.variable}>
         {children} <Toaster position="bottom-left" />
-        <GoogleAnalytics gaId="G-W662XT6GZS" />
+        <GoogleAnalytics gaId="G-36MPB4YWYX" />
       </body>
     </html>
   );
