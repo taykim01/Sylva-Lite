@@ -204,8 +204,10 @@ export function useDemo() {
     _resetAll();
   };
 
+  const sortedNotes = notes?.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
   return {
-    notes: notes?.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()),
+    notes: sortedNotes,
     loading,
     error,
     createNote,
