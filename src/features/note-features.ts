@@ -8,7 +8,10 @@ import { Response } from "@/core/types";
 export async function handleCreateEmptyNote(): Promise<Response<Tables<"note">>> {
   const supabase = await createClient();
   const { data, error } = await handleGetUser();
-  if (error) throw new Error(error);
+  if (error) {
+    console.error("Error creating empty note:", error);
+    throw new Error(error);
+  }
   const newNote: Omit<Tables<"note">, "id" | "created_at"> = {
     creator_id: data!.id,
     title: "",
@@ -17,16 +20,25 @@ export async function handleCreateEmptyNote(): Promise<Response<Tables<"note">>>
     y: 0,
   };
   const { data: createdNote, error: noteError } = await supabase.from("note").insert(newNote).select("*").single();
-  if (noteError) throw new Error(noteError.message);
+  if (noteError) {
+    console.error("Error creating empty note:", noteError.message);
+    throw new Error(noteError.message);
+  }
   return { data: createdNote as Tables<"note">, error: null };
 }
 
 export async function handleGetMyNotes(): Promise<Response<Tables<"note">[]>> {
   const supabase = await createClient();
   const { data, error } = await handleGetUser();
-  if (error) throw new Error(error);
+  if (error) {
+    console.error("Error getting notes:", error);
+    throw new Error(error);
+  }
   const { data: notes, error: notesError } = await supabase.from("note").select("*").eq("creator_id", data!.id);
-  if (notesError) throw new Error(notesError.message);
+  if (notesError) {
+    console.error("Error getting notes:", notesError.message);
+    throw new Error(notesError.message);
+  }
   return { data: notes as Tables<"note">[], error: null };
 }
 
@@ -46,7 +58,10 @@ export async function handleUpdateNote(
     .eq("id", id)
     .select("*")
     .single();
-  if (noteError) throw new Error(noteError.message);
+  if (noteError) {
+    console.error("Error updating note:", noteError.message);
+    throw new Error(noteError.message);
+  }
   return { data: updatedNote as Tables<"note">, error: null };
 }
 
@@ -58,6 +73,9 @@ export async function handleDeleteNote(id: string): Promise<Response<Tables<"not
     .eq("id", id)
     .select("*")
     .single();
-  if (noteError) throw new Error(noteError.message);
+  if (noteError) {
+    console.error("Error deleting note:", noteError.message);
+    throw new Error(noteError.message);
+  }
   return { data: deletedNote as Tables<"note">, error: null };
 }

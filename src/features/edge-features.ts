@@ -20,13 +20,19 @@ export async function handleCreateEdge(
   };
   const supabase = await createClient();
   const { data, error } = await supabase.from("edge").insert(newEdge).select().single();
-  if (error) return { data: null, error: error.message };
+  if (error) {
+    console.error("Error creating edge:", error.message);
+    return { data: null, error: error.message };
+  }
   return { data: data as Tables<"edge">, error: null };
 }
 
 export async function handleGetEdges(): Promise<Response<Tables<"edge">[]>> {
   const { data, error } = await handleGetMyNotes();
-  if (error || !data) return { data: null, error: error };
+  if (error || !data) {
+    console.error("Error getting edges:", error);
+    return { data: null, error: error };
+  }
 
   const supabase = await createClient();
   const notedIds = data.map((note) => note.id);
@@ -34,20 +40,29 @@ export async function handleGetEdges(): Promise<Response<Tables<"edge">[]>> {
     .from("edge")
     .select("*")
     .or(`source_note_id.in.(${notedIds.join(",")}),target_note_id.in.(${notedIds.join(",")})`);
-  if (edgesError) return { data: null, error: edgesError.message };
+  if (edgesError) {
+    console.error("Error getting edges:", edgesError.message);
+    return { data: null, error: edgesError.message };
+  }
   return { data: edges as Tables<"edge">[], error: null };
 }
 
 export async function handleUpdateEdge(id: string, updates: Partial<Tables<"edge">>) {
   const supabase = await createClient();
   const { data, error } = await supabase.from("edge").update(updates).eq("id", id).select().single();
-  if (error) return { data: null, error: error.message };
+  if (error) {
+    console.error("Error updating edge:", error.message);
+    return { data: null, error: error.message };
+  }
   return { data: data as Tables<"edge">, error: null };
 }
 
 export async function handleDeleteEdge(id: string) {
   const supabase = await createClient();
   const { error } = await supabase.from("edge").delete().eq("id", id);
-  if (error) return { data: null, error: error.message };
+  if (error) {
+    console.error("Error deleting edge:", error.message);
+    return { data: null, error: error.message };
+  }
   return { data: null, error: null };
 }

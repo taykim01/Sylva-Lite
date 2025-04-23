@@ -3,7 +3,6 @@
 import {
   applyNodeChanges,
   NodeChange,
-  NodeDimensionChange,
   ReactFlow,
   Node,
   Edge,
@@ -59,24 +58,18 @@ function BoardContent() {
     }
   }, [edges]);
 
-  const onNodesChange = useCallback(
-    async (changes: NodeChange<NoteNode>[]) => {
-      setNodes((nds) => applyNodeChanges(changes, nds));
-      const newPosition = (
-        changes[0] as NodeDimensionChange & {
-          position: { x: number; y: number };
-        }
-      ).position;
-      if (!newPosition) return;
-    },
-    [setNodes],
-  );
-
-  const onNodeDragStop = useCallback(async (e: React.MouseEvent, node: Node<Record<string, unknown>>) => {
-    const { position, id } = node;
-    const { x, y } = position;
-    await moveNote(id, { x, y });
+  const onNodesChange = useCallback((changes: NodeChange<NoteNode>[]) => {
+    setNodes((nds) => applyNodeChanges(changes, nds));
   }, []);
+
+  const onNodeDragStop = useCallback(
+    async (e: React.MouseEvent, node: Node<Record<string, unknown>>) => {
+      const { position, id } = node;
+      const { x, y } = position;
+      await moveNote(id, { x, y });
+    },
+    [moveNote],
+  );
 
   const onEdgesChange = useCallback(
     (changes: EdgeChange[]) => {

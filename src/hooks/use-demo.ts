@@ -15,7 +15,7 @@ import {
 import { Position } from "@xyflow/react";
 import { debounce } from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 
 export function useDemo() {
@@ -192,11 +192,6 @@ export function useDemo() {
       router.push(`/demo?note_id=${id}`);
     }
   };
-
-  useEffect(() => {
-    readEdges();
-    readMyNotes();
-  }, []);
 
   const currentNote = notes?.find((note) => note.id === noteId);
 

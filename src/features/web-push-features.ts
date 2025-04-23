@@ -15,7 +15,10 @@ export async function handleGetSubscription() {
   const { data, error } = await handleGetUser();
   const userId = data?.id;
 
-  if (error || !userId) return { error: error || "No user found" };
+  if (error || !userId) {
+    console.error("Error getting subscription:", error || "No user found");
+    return { error: error || "No user found" };
+  }
 
   const { data: user, error: fetchError } = await supabase
     .from("user")
@@ -24,6 +27,7 @@ export async function handleGetSubscription() {
     .single();
 
   if (fetchError || !user?.push_subscription) {
+    console.error("Error getting subscription:", fetchError?.message || "No subscription available for this user");
     return { error: fetchError?.message || "No subscription available for this user" };
   }
 
@@ -35,7 +39,10 @@ export async function subscribeUser(sub: PushSubscription) {
   const { data, error: userError } = await handleGetUser();
   const userId = data?.id;
 
-  if (userError || !userId) return { error: userError || "No user found" };
+  if (userError || !userId) {
+    console.error("Error subscribing user:", userError || "No user found");
+    return { error: userError || "No user found" };
+  }
 
   const subscription = {
     endpoint: sub.endpoint,
@@ -58,7 +65,10 @@ export async function unsubscribeUser() {
   const { data, error: userError } = await handleGetUser();
   const userId = data?.id;
 
-  if (userError || !userId) return { error: userError || "No user found" };
+  if (userError || !userId) {
+    console.error("Error unsubscribing user:", userError || "No user found");
+    return { error: userError || "No user found" };
+  }
 
   const { error } = await supabase.from("user").update({ push_subscription: null }).eq("id", userId);
 
@@ -75,7 +85,10 @@ export async function sendNotification(title: string, body: string) {
   const { data, error: userError } = await handleGetUser();
   const userId = data?.id;
 
-  if (userError || !userId) return { error: userError || "No user found" };
+  if (userError || !userId) {
+    console.error("Error sending notification:", userError || "No user found");
+    return { error: userError || "No user found" };
+  }
 
   const { data: user, error: fetchError } = await supabase
     .from("user")
@@ -84,6 +97,7 @@ export async function sendNotification(title: string, body: string) {
     .single();
 
   if (fetchError || !user?.push_subscription) {
+    console.error("Error sending notification:", fetchError?.message || "No subscription available for this user");
     throw new Error("No subscription available for this user");
   }
 

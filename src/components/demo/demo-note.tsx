@@ -75,7 +75,13 @@ export function DemoNote(props: Tables<"note"> & { handle?: boolean }) {
                 </Wrapper>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem variant="destructive" onClick={async () => await deleteNote(props.id)}>
+                <DropdownMenuItem
+                  variant="destructive"
+                  onClick={async (e) => {
+                    e.stopPropagation();
+                    await deleteNote(props.id);
+                  }}
+                >
                   Delete
                 </DropdownMenuItem>
               </DropdownMenuContent>

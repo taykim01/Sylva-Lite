@@ -5,16 +5,6 @@ import { Tables } from "@/database.types";
 import { Response } from "@/core/types";
 import { Position } from "@xyflow/react";
 
-export async function handleDemoSignIn() {
-  const supabase = await createClient();
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: "demo@sylva.com",
-    password: "qwer1234",
-  });
-  if (error) return { data: null, error: error.message };
-  return { data, error: null };
-}
-
 export async function handleDemoCreateEmptyNote(): Promise<Response<Tables<"note">>> {
   const supabase = await createClient();
   const newNote: Omit<Tables<"note">, "id" | "created_at"> = {
@@ -25,7 +15,10 @@ export async function handleDemoCreateEmptyNote(): Promise<Response<Tables<"note
     y: 0,
   };
   const { data: createdNote, error: noteError } = await supabase.from("note").insert(newNote).select("*").single();
-  if (noteError) return { data: null, error: noteError.message };
+  if (noteError) {
+    console.error("Error creating empty note:", noteError.message);
+    return { data: null, error: noteError.message };
+  }
   return { data: createdNote as Tables<"note">, error: null };
 }
 
@@ -35,7 +28,10 @@ export async function handleDemoGetMyNotes(): Promise<Response<Tables<"note">[]>
     .from("note")
     .select("*")
     .eq("creator_id", process.env.NEXT_PUBLIC_DEMO_ID!);
-  if (notesError) return { data: null, error: notesError.message };
+  if (notesError) {
+    console.error("Error getting notes:", notesError.message);
+    return { data: null, error: notesError.message };
+  }
   return { data: notes as Tables<"note">[], error: null };
 }
 
@@ -55,20 +51,21 @@ export async function handleDemoUpdateNote(
     .eq("id", id)
     .select("*")
     .single();
-  if (noteError) return { data: null, error: noteError.message };
+  if (noteError) {
+    console.error("Error updating note:", noteError.message);
+    return { data: null, error: noteError.message };
+  }
   return { data: updatedNote as Tables<"note">, error: null };
 }
 
 export async function handleDemoDeleteNote(id: string): Promise<Response<Tables<"note">>> {
   const supabase = await createClient();
-  const { data: deletedNote, error: noteError } = await supabase
-    .from("note")
-    .delete()
-    .eq("id", id)
-    .select("*")
-    .single();
-  if (noteError) return { data: null, error: noteError.message };
-  return { data: deletedNote as Tables<"note">, error: null };
+  const { error: noteError } = await supabase.from("note").delete().eq("id", id);
+  if (noteError) {
+    console.error("Error deleting note:", noteError.message);
+    return { data: null, error: noteError.message };
+  }
+  return { data: null, error: null };
 }
 
 export async function handleDemoCreateEdge(
@@ -85,13 +82,19 @@ export async function handleDemoCreateEdge(
   };
   const supabase = await createClient();
   const { data, error } = await supabase.from("edge").insert(newEdge).select().single();
-  if (error) return { data: null, error: error.message };
+  if (error) {
+    console.error("Error creating edge:", error.message);
+    return { data: null, error: error.message };
+  }
   return { data: data as Tables<"edge">, error: null };
 }
 
 export async function handleDemoGetEdges(): Promise<Response<Tables<"edge">[]>> {
   const { data, error } = await handleDemoGetMyNotes();
-  if (error || !data) return { data: null, error: error };
+  if (error || !data) {
+    console.error("Error getting edges:", error);
+    return { data: null, error: error };
+  }
 
   const supabase = await createClient();
   const notedIds = data.map((note) => note.id);
@@ -99,20 +102,30 @@ export async function handleDemoGetEdges(): Promise<Response<Tables<"edge">[]>> 
     .from("edge")
     .select("*")
     .or(`source_note_id.in.(${notedIds.join(",")}),target_note_id.in.(${notedIds.join(",")})`);
-  if (edgesError) return { data: null, error: edgesError.message };
+  if (edgesError) {
+    console.error("Error getting edges:", edgesError.message);
+    return { data: null, error: edgesError.message };
+  }
   return { data: edges as Tables<"edge">[], error: null };
 }
 
 export async function handleDemoUpdateEdge(id: string, updates: Partial<Tables<"edge">>) {
   const supabase = await createClient();
   const { data, error } = await supabase.from("edge").update(updates).eq("id", id).select().single();
-  if (error) return { data: null, error: error.message };
+  if (error) {
+    console.error("Error updating edge:", error.message);
+    return { data: null, error: error.message };
+  }
   return { data: data as Tables<"edge">, error: null };
 }
 
 export async function handleDemoDeleteEdge(id: string) {
   const supabase = await createClient();
+  console.log("deleting edge", id);
   const { error } = await supabase.from("edge").delete().eq("id", id);
-  if (error) return { data: null, error: error.message };
+  if (error) {
+    console.error("Error deleting edge:", error.message);
+    return { data: null, error: error.message };
+  }
   return { data: null, error: null };
 }
