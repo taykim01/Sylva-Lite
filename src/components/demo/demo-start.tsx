@@ -8,33 +8,28 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "../ui/button";
 import Spinner from "../common/spinner";
 import { useDemo } from "@/hooks/use-demo";
 
 export function DemoStart() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [loading, setLoading] = useState(false);
   const { readEdges, readMyNotes } = useDemo();
 
-  useEffect(() => {
-    readEdges();
-    readMyNotes();
-  }, []);
-
-  // const handleStart = async () => {
-  //   setLoading(true);
-  //   try {
-  //     await readEdges();
-  //     await readMyNotes();
-  //     setOpen(false);
-  //   } catch (error) {
-  //     console.error(error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+  const handleStart = async () => {
+    setLoading(true);
+    try {
+      await readEdges();
+      await readMyNotes();
+      setOpen(false);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Dialog open={open}>
@@ -44,10 +39,7 @@ export function DemoStart() {
           <DialogDescription>You can start a demo session without signing up.</DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button
-            // onClick={handleStart}
-            disabled={loading}
-          >
+          <Button onClick={handleStart} disabled={loading}>
             {loading ? <Spinner /> : "Start"}
           </Button>
         </DialogFooter>

@@ -146,6 +146,7 @@ export function useDemo() {
       const { error } = await handleDemoDeleteNote(id);
       if (error) throw error;
       _deleteNote(id);
+      router.push("/demo");
       toast("Note deleted successfully");
     } catch (error) {
       setError(error as string);

@@ -60,10 +60,10 @@ export async function handleDemoUpdateNote(
 
 export async function handleDemoDeleteNote(id: string): Promise<Response<Tables<"note">>> {
   const supabase = await createClient();
-  const { error: noteError } = await supabase.from("note").delete().eq("id", id);
-  if (noteError) {
-    console.error("Error deleting note:", noteError.message);
-    return { data: null, error: noteError.message };
+  const { error } = await supabase.from("note").delete().eq("id", id);
+  if (error) {
+    console.error("Error deleting note:", error.message);
+    return { data: null, error: error.message };
   }
   return { data: null, error: null };
 }
@@ -121,7 +121,6 @@ export async function handleDemoUpdateEdge(id: string, updates: Partial<Tables<"
 
 export async function handleDemoDeleteEdge(id: string) {
   const supabase = await createClient();
-  console.log("deleting edge", id);
   const { error } = await supabase.from("edge").delete().eq("id", id);
   if (error) {
     console.error("Error deleting edge:", error.message);

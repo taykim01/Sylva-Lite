@@ -31,6 +31,11 @@ function BoardContent() {
   const [nodes, setNodes] = useState<NoteNode[]>([]);
   const [flowEdges, setFlowEdges] = useState<Edge[]>([]);
   const [isConnecting, setIsConnecting] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (notes) {
@@ -98,6 +103,10 @@ function BoardContent() {
     },
     [createEdge],
   );
+
+  if (!mounted) {
+    return <div style={{ width: "100%" }} className="h-[calc(100vh-40px)]" />;
+  }
 
   return (
     <div style={{ width: "100%" }} className="h-[calc(100vh-40px)]">
