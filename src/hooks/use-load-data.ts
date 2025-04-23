@@ -1,16 +1,14 @@
 "use client";
 
+import { useDashboardStore } from "@/core/states";
 import { handleGetEdges } from "@/features/edge-features";
 import { handleGetMyNotes } from "@/features/note-features";
-import { useState } from "react";
-import useEdgeStore from "@/core/states/edge.store";
-import useNoteStore from "@/core/states/note.store";
+import { useEffect, useState } from "react";
 
 export function useLoadData() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { _setEdges } = useEdgeStore();
-  const { _setNotes } = useNoteStore();
+  const { _setNotes, notes, _setEdges, edges } = useDashboardStore();
 
   const readEdges = async () => {
     setLoading(true);
@@ -39,5 +37,10 @@ export function useLoadData() {
     }
   };
 
-  return { readEdges, readMyNotes, loading, error };
+  useEffect(() => {
+    readEdges();
+    readMyNotes();
+  }, []);
+
+  return { loading, error, edges, notes };
 }

@@ -1,13 +1,28 @@
-"use client";
-
-import useEdgeStore from "@/core/states/edge.store";
-import { handleCreateEdge, handleDeleteEdge, handleUpdateEdge } from "@/features/edge-features";
+import { Tables } from "@/database.types";
 import { Position } from "@xyflow/react";
 import { useState } from "react";
-import { Tables } from "@/database.types";
 
-export function useEdge() {
-  const { edges, _addEdge, _updateEdge, _deleteEdge } = useEdgeStore();
+export interface BaseEdgeStore {
+  edges: Tables<"edge">[] | null;
+  _addEdge: (edge: Tables<"edge">) => void;
+  _updateEdge: (id: string, updates: Partial<Tables<"edge">>) => void;
+  _deleteEdge: (id: string) => void;
+}
+
+export interface BaseEdgeOperations {
+  createEdge: (
+    sourceNoteId: string,
+    targetNoteId: string,
+    sourceHandle: Position,
+    targetHandle: Position,
+  ) => Promise<void>;
+  updateEdge: (id: string, updates: Partial<Tables<"edge">>) => Promise<void>;
+  deleteEdge: (id: string) => Promise<void>;
+}
+
+export function useBaseEdge(store: BaseEdgeStore, operations: BaseEdgeOperations) {
+  const { edges, _deleteEdge } = store;
+  const { createEdge: createEdgeOp, updateEdge: updateEdgeOp, deleteEdge: deleteEdgeOp } = operations;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -19,9 +34,7 @@ export function useEdge() {
   ) => {
     setLoading(true);
     try {
-      const { data, error } = await handleCreateEdge(sourceNoteId, targetNoteId, sourceHandle, targetHandle);
-      if (error) throw error;
-      _addEdge(data!);
+      await createEdgeOp(sourceNoteId, targetNoteId, sourceHandle, targetHandle);
     } catch (error) {
       setError(error as string);
       alert(error);
@@ -33,9 +46,7 @@ export function useEdge() {
   const updateEdge = async (id: string, updates: Partial<Tables<"edge">>) => {
     setLoading(true);
     try {
-      const { data, error } = await handleUpdateEdge(id, updates);
-      if (error) throw error;
-      _updateEdge(id, data!);
+      await updateEdgeOp(id, updates);
     } catch (error) {
       setError(error as string);
       alert(error);
@@ -47,8 +58,7 @@ export function useEdge() {
   const deleteEdge = async (id: string) => {
     setLoading(true);
     try {
-      const { error } = await handleDeleteEdge(id);
-      if (error) throw error;
+      await deleteEdgeOp(id);
       _deleteEdge(id);
     } catch (error) {
       setError(error as string);

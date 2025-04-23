@@ -3,7 +3,6 @@
 import {
   applyNodeChanges,
   NodeChange,
-  ReactFlow,
   Node,
   Edge,
   EdgeChange,
@@ -13,21 +12,28 @@ import {
   Position,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { useState, useCallback, useEffect, Suspense } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Tables } from "@/database.types";
-import { useDemo } from "@/hooks/use-demo";
 import { NoteNode } from "@/core/types";
-import { DemoNoteNode } from "./demo-note-node";
-import Spinner from "@/components/common/spinner";
-
-const nodeTypes = { note: DemoNoteNode };
 
 const defaultEdgeOptions = {
   style: { strokeWidth: 1.5, stroke: "#D0D5DD" },
 };
 
-function BoardContent() {
-  const { notes, moveNote, edges, deleteEdge, createEdge } = useDemo();
+interface UseBoardStateProps {
+  notes: Tables<"note">[] | null;
+  edges: Tables<"edge">[] | null;
+  onMoveNote: (id: string, position: { x: number; y: number }) => Promise<void>;
+  onCreateEdge: (
+    sourceNoteId: string,
+    targetNoteId: string,
+    sourceHandle: Position,
+    targetHandle: Position,
+  ) => Promise<void>;
+  onDeleteEdge: (id: string) => Promise<void>;
+}
+
+export function useBoardState({ notes, edges, onMoveNote, onCreateEdge, onDeleteEdge }: UseBoardStateProps) {
   const [nodes, setNodes] = useState<NoteNode[]>([]);
   const [flowEdges, setFlowEdges] = useState<Edge[]>([]);
   const [isConnecting, setIsConnecting] = useState(false);
@@ -43,11 +49,11 @@ function BoardContent() {
         id: note.id,
         type: "note",
         position: { x: note.x, y: note.y },
-        data: { ...note, isConnecting },
+        data: { ...note },
       }));
       setNodes(noteNodes);
     }
-  }, [notes, isConnecting]);
+  }, [notes]);
 
   useEffect(() => {
     if (edges) {
@@ -71,9 +77,9 @@ function BoardContent() {
     async (e: React.MouseEvent, node: Node<Record<string, unknown>>) => {
       const { position, id } = node;
       const { x, y } = position;
-      await moveNote(id, { x, y });
+      await onMoveNote(id, { x, y });
     },
-    [moveNote],
+    [onMoveNote],
   );
 
   const onEdgesChange = useCallback(
@@ -81,11 +87,11 @@ function BoardContent() {
       setFlowEdges((eds) => applyEdgeChanges(changes, eds));
       changes.forEach((change) => {
         if (change.type === "remove") {
-          deleteEdge(change.id);
+          onDeleteEdge(change.id);
         }
       });
     },
-    [deleteEdge],
+    [onDeleteEdge],
   );
 
   const onConnectStart = useCallback(() => {
@@ -99,47 +105,21 @@ function BoardContent() {
   const onConnect = useCallback(
     (params: Connection) => {
       setFlowEdges((eds) => addEdge({ ...params, ...defaultEdgeOptions }, eds));
-      createEdge(params.source!, params.target!, params.sourceHandle as Position, params.targetHandle as Position);
+      onCreateEdge(params.source!, params.target!, params.sourceHandle as Position, params.targetHandle as Position);
     },
-    [createEdge],
+    [onCreateEdge],
   );
 
-  if (!mounted) {
-    return <div style={{ width: "100%" }} className="h-[calc(100vh-40px)]" />;
-  }
-
-  return (
-    <div style={{ width: "100%" }} className="h-[calc(100vh-40px)]">
-      <ReactFlow
-        style={{
-          backgroundColor: "#FAFAFA",
-          width: "100%",
-          height: "100%",
-        }}
-        nodes={nodes}
-        onNodesChange={onNodesChange}
-        nodeTypes={nodeTypes}
-        edges={flowEdges}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        onConnectStart={onConnectStart}
-        onConnectEnd={onConnectEnd}
-        onNodeDragStop={onNodeDragStop}
-        defaultEdgeOptions={defaultEdgeOptions}
-        fitView
-        proOptions={{ hideAttribution: true }}
-      />
-    </div>
-  );
-}
-
-export function DemoBoard() {
-  const { viewMode } = useDemo();
-  if (viewMode === "list") return;
-
-  return (
-    <Suspense fallback={<Spinner />}>
-      <BoardContent />
-    </Suspense>
-  );
+  return {
+    nodes,
+    flowEdges,
+    isConnecting,
+    mounted,
+    onNodesChange,
+    onNodeDragStop,
+    onEdgesChange,
+    onConnectStart,
+    onConnectEnd,
+    onConnect,
+  };
 }

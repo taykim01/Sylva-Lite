@@ -17,12 +17,12 @@ import Link from "@tiptap/extension-link";
 import Highlight from "@tiptap/extension-highlight";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/themes/light.css";
-import { useNote } from "@/hooks/use-note";
+import { useDashboard } from "@/hooks/use-dashboard";
 import { useEffect } from "react";
 import SlashCommands from "./slash-commands";
 
 export function TextEditor(props: { noteId: string; isSideDrawer?: boolean }) {
-  const { notes, debounceUpdate, currentNote } = useNote();
+  const { notes, debounceUpdate, currentNote } = useDashboard();
   const note = notes?.find((note) => note.id === props.noteId);
   const editor = useEditor({
     immediatelyRender: false,

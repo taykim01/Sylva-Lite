@@ -1,4 +1,4 @@
 export { default as useUserStore } from "./user.store";
-export { default as useNoteStore } from "./note.store";
+export { default as useDashboardStore } from "./dashboard.store";
 
 export * from "../types";

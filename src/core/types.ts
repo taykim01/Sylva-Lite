@@ -6,7 +6,7 @@ export interface UserState {
   _resetUser: () => void;
 }
 
-export interface NoteState {
+export interface DashboardState {
   notes: Tables<"note">[];
   viewMode: "board" | "list";
   _setNotes: (notes: Tables<"note">[]) => void;
@@ -15,9 +15,6 @@ export interface NoteState {
   _updateNote: (id: string, note: Partial<Tables<"note">>) => void;
   _deleteNote: (id: string) => void;
   _resetNotes: () => void;
-}
-
-export interface EdgeState {
   edges: Tables<"edge">[];
   _setEdges: (edges: Tables<"edge">[]) => void;
   _addEdge: (edge: Tables<"edge">) => void;

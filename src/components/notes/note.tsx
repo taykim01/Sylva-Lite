@@ -1,5 +1,7 @@
+"use client";
+
 import { Tables } from "@/database.types";
-import { useNote } from "@/hooks/use-note";
+import { useDashboard } from "@/hooks/use-dashboard";
 import { ChangeEvent, useEffect, useState } from "react";
 import { Ellipsis } from "lucide-react";
 import {
@@ -8,15 +10,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useEdge } from "@/hooks/use-edge";
 import Wrapper from "./wrapper";
 import { TextEditor } from "./text-editor";
 import { Handles } from "./handles";
 import { useSearchParams } from "next/navigation";
 
 export default function Note(props: Tables<"note"> & { handle?: boolean }) {
-  const { selectNote, deleteNote, debounceUpdate } = useNote();
-  const { createEdge } = useEdge();
+  const { selectNote, deleteNote, debounceUpdate, createEdge } = useDashboard();
   const [isHovered, setIsHovered] = useState(false);
   const [noteSelected, setNoteSelected] = useState(false);
   const searchParams = useSearchParams();

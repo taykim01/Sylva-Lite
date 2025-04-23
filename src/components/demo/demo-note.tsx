@@ -1,3 +1,5 @@
+"use client";
+
 import { Tables } from "@/database.types";
 import { ChangeEvent, useEffect, useState } from "react";
 import { Ellipsis } from "lucide-react";

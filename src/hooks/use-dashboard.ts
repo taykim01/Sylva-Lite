@@ -1,124 +1,40 @@
 "use client";
 
-import useDemoStore from "@/core/states/demo.store";
+import { useDashboardStore } from "@/core/states";
 import { Tables } from "@/database.types";
-import {
-  handleDemoCreateEdge,
-  handleDemoGetEdges,
-  handleDemoUpdateEdge,
-  handleDemoDeleteEdge,
-  handleDemoCreateEmptyNote,
-  handleDemoDeleteNote,
-  handleDemoGetMyNotes,
-  handleDemoUpdateNote,
-} from "@/features/demo-features";
+import { handleCreateEdge, handleUpdateEdge, handleDeleteEdge } from "@/features/edge-features";
+import { handleCreateEmptyNote, handleDeleteNote, handleUpdateNote } from "@/features/note-features";
 import { Position } from "@xyflow/react";
 import { debounce } from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 
-export function useDemo() {
+export function useDashboard() {
   const searchParams = useSearchParams();
   const noteId = searchParams.get("note_id") as string | undefined;
   const {
+    edges,
     notes,
     viewMode,
-    _setNotes,
     _addNote,
     _updateNote,
     _deleteNote,
     _setViewMode,
-    edges,
-    _setEdges,
     _addEdge,
     _updateEdge,
     _deleteEdge,
-  } = useDemoStore();
+  } = useDashboardStore();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  const createEdge = async (
-    sourceNoteId: string,
-    targetNoteId: string,
-    sourceHandle: Position,
-    targetHandle: Position,
-  ) => {
-    setLoading(true);
-    try {
-      const { data, error } = await handleDemoCreateEdge(sourceNoteId, targetNoteId, sourceHandle, targetHandle);
-      if (error) throw error;
-      _addEdge(data!);
-    } catch (error) {
-      setError(error as string);
-      alert(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const readEdges = async () => {
-    setLoading(true);
-    try {
-      const { data, error } = await handleDemoGetEdges();
-      if (error) throw error;
-      _setEdges(data!);
-    } catch (error) {
-      setError(error as string);
-      alert(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const updateEdge = async (id: string, updates: Partial<Tables<"edge">>) => {
-    setLoading(true);
-    try {
-      const { data, error } = await handleDemoUpdateEdge(id, updates);
-      if (error) throw error;
-      _updateEdge(id, data!);
-    } catch (error) {
-      setError(error as string);
-      alert(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const deleteEdge = async (id: string) => {
-    setLoading(true);
-    try {
-      const { error } = await handleDemoDeleteEdge(id);
-      if (error) throw error;
-      _deleteEdge(id);
-    } catch (error) {
-      setError(error as string);
-      alert(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const createNote = async () => {
     setLoading(true);
     try {
-      const { data, error } = await handleDemoCreateEmptyNote();
+      const { data, error } = await handleCreateEmptyNote();
       if (error) throw error;
       _addNote(data!);
-    } catch (error) {
-      setError(error as string);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const readMyNotes = async () => {
-    setLoading(true);
-    try {
-      const { data, error } = await handleDemoGetMyNotes();
-      if (error) throw error;
-      _setNotes(data!);
     } catch (error) {
       setError(error as string);
     } finally {
@@ -130,7 +46,7 @@ export function useDemo() {
     setLoading(true);
     try {
       _updateNote(id, updates);
-      const { error } = await handleDemoUpdateNote(id, updates);
+      const { error } = await handleUpdateNote(id, updates);
       if (error) throw error;
     } catch (error) {
       setError(error as string);
@@ -142,10 +58,10 @@ export function useDemo() {
   const deleteNote = async (id: string) => {
     setLoading(true);
     try {
-      const { error } = await handleDemoDeleteNote(id);
+      const { error } = await handleDeleteNote(id);
       if (error) throw error;
       _deleteNote(id);
-      router.push("/demo");
+      router.push("/dashboard");
       toast("Note deleted successfully");
     } catch (error) {
       setError(error as string);
@@ -159,7 +75,7 @@ export function useDemo() {
     _updateNote(id, updates);
     const debouncedUpdateNote = debounce(async (id: string, updates: Partial<{ title: string; content: string }>) => {
       try {
-        const { error } = await handleDemoUpdateNote(id, updates);
+        const { error } = await handleUpdateNote(id, updates);
         if (error) throw error;
       } catch (error) {
         setError(error as string);
@@ -172,7 +88,7 @@ export function useDemo() {
     debounce(async (id: string, updates: Partial<{ title: string; content: string }>) => {
       _updateNote(id, updates);
       try {
-        const { error } = await handleDemoUpdateNote(id, updates);
+        const { error } = await handleUpdateNote(id, updates);
         if (error) throw error;
       } catch (error) {
         setError(error as string);
@@ -184,12 +100,12 @@ export function useDemo() {
     const prevNoteId = noteId;
     if (id === noteId) return;
     if (prevNoteId) {
-      router.push("/demo");
+      router.push("/dashboard");
       setTimeout(() => {
-        router.push(`/demo?note_id=${id}`);
+        router.push(`/dashboard?note_id=${id}`);
       }, 500);
     } else {
-      router.push(`/demo?note_id=${id}`);
+      router.push(`/dashboard?note_id=${id}`);
     }
   };
 
@@ -199,14 +115,58 @@ export function useDemo() {
     _setViewMode(viewMode === "board" ? "list" : "board");
   };
 
-  const sortedNotes = notes?.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  const createEdge = async (
+    sourceNoteId: string,
+    targetNoteId: string,
+    sourceHandle: Position,
+    targetHandle: Position,
+  ) => {
+    setLoading(true);
+    try {
+      const { data, error } = await handleCreateEdge(sourceNoteId, targetNoteId, sourceHandle, targetHandle);
+      if (error) throw error;
+      _addEdge(data!);
+    } catch (error) {
+      setError(error as string);
+      alert(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateEdge = async (id: string, updates: Partial<Tables<"edge">>) => {
+    setLoading(true);
+    try {
+      const { data, error } = await handleUpdateEdge(id, updates);
+      if (error) throw error;
+      _updateEdge(id, data!);
+    } catch (error) {
+      setError(error as string);
+      alert(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteEdge = async (id: string) => {
+    setLoading(true);
+    try {
+      const { error } = await handleDeleteEdge(id);
+      if (error) throw error;
+      _deleteEdge(id);
+    } catch (error) {
+      setError(error as string);
+      alert(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return {
-    notes: sortedNotes,
+    notes: notes?.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()),
     loading,
     error,
     createNote,
-    readMyNotes,
     moveNote,
     deleteNote,
     currentNote,
@@ -215,10 +175,9 @@ export function useDemo() {
     debounceUpdate,
     toggleViewMode,
     viewMode,
-    edges,
     createEdge,
     updateEdge,
     deleteEdge,
-    readEdges,
+    edges,
   };
 }

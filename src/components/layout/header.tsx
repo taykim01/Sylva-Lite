@@ -13,13 +13,13 @@ import { useAuth } from "@/hooks/use-auth";
 import { usePWAInstall } from "@/hooks/use-pwa-install";
 import { Switch } from "../ui/switch";
 import { Label } from "../ui/label";
-import { useNote } from "@/hooks/use-note";
+import { useDashboard } from "@/hooks/use-dashboard";
 import { FeatureRequestMenu } from "./feature-request-menu";
 
 export default function Header() {
   const { signOut, user } = useAuth();
   const { isInstallable, handleInstallClick } = usePWAInstall();
-  const { toggleViewMode, viewMode } = useNote();
+  const { toggleViewMode, viewMode } = useDashboard();
 
   return (
     <div className="h-10 py-2 px-4 bg-white flex items-center justify-between border-b border-slate-200 sticky top-0 z-10">
