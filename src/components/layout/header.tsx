@@ -14,6 +14,7 @@ import { usePWAInstall } from "@/hooks/use-pwa-install";
 import { Switch } from "../ui/switch";
 import { Label } from "../ui/label";
 import { useNote } from "@/hooks/use-note";
+import { FeatureRequestMenu } from "./feature-request-menu";
 
 export default function Header() {
   const { signOut, user } = useAuth();
@@ -42,6 +43,7 @@ export default function Header() {
                 Install App
               </DropdownMenuItem>
             )}
+            <FeatureRequestMenu />
             <DropdownMenuItem onClick={signOut}>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <path

@@ -14,6 +14,7 @@ import { Label } from "../ui/label";
 import { useDemo } from "@/hooks/use-demo";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
+import { FeatureRequestMenu } from "../layout/feature-request-menu";
 
 export function DemoHeader() {
   const { toggleViewMode, viewMode } = useDemo();
@@ -44,6 +45,7 @@ export function DemoHeader() {
               <Rocket size={16} className="text-slate-600" />
               Try Sylva!
             </DropdownMenuItem>
+            <FeatureRequestMenu />
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>

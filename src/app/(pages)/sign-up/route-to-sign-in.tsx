@@ -1,16 +1,12 @@
-"use client";
-
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function RouteToSignIn() {
-  const router = useRouter();
-  const toSignIn = () => router.push("/sign-in");
   return (
     <div className="flex gap-2 polymath">
       <div className="text-r14 text-slate-700">Already have an account?</div>
-      <div className="text-m14 text-slate-500 underline cursor-pointer" onClick={toSignIn}>
+      <Link href="/sign-in" className="text-m14 text-slate-500 underline cursor-pointer">
         Sign In
-      </div>
+      </Link>
     </div>
   );
 }

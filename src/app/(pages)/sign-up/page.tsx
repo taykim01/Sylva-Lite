@@ -3,7 +3,7 @@ import RouteToSignIn from "./route-to-sign-in";
 import SignUpForm from "./sign-up-form";
 import { redirect } from "next/navigation";
 import { handleGetUser } from "@/features/auth-features";
-
+import RouteToDemo from "@/components/auth/route-to-demo";
 export default async function Page() {
   const { data: user } = await handleGetUser();
   if (user) redirect("/dashboard");
@@ -11,7 +11,10 @@ export default async function Page() {
   return (
     <AuthBackground>
       <SignUpForm />
-      <RouteToSignIn />
+      <div className="flex flex-col items-center gap-2">
+        <RouteToSignIn />
+        <RouteToDemo />
+      </div>
     </AuthBackground>
   );
 }

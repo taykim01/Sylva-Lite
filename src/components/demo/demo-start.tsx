@@ -42,8 +42,8 @@ export function DemoStart() {
   }, []);
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="w-100">
+    <Dialog open={open}>
+      <DialogContent className="w-100" noX>
         <DialogHeader>
           <DialogTitle>Start Demo</DialogTitle>
           <DialogDescription>You can start a demo session without signing up.</DialogDescription>
