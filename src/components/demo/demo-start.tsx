@@ -13,10 +13,12 @@ import { handleDemoSignIn } from "@/features/demo-features";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import Spinner from "../common/spinner";
+import { useDemo } from "@/hooks/use-demo";
 
 export function DemoStart() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [loading, setLoading] = useState(false);
+  const { readEdges, readMyNotes } = useDemo();
 
   const handleStart = async () => {
     setLoading(true);
@@ -24,7 +26,8 @@ export function DemoStart() {
       const { error } = await handleDemoSignIn();
       if (error) return alert(error);
       setOpen(false);
-      window.location.href = "/demo";
+      await readEdges();
+      await readMyNotes();
     } catch (error) {
       console.error(error);
     } finally {
@@ -34,7 +37,9 @@ export function DemoStart() {
 
   const checkAuth = async () => {
     const { data, error } = await handleGetUser();
-    if (error || !data) setOpen(true);
+    if (error || !data) {
+      setOpen(true);
+    }
   };
 
   useEffect(() => {

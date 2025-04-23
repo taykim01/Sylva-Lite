@@ -40,7 +40,7 @@ export interface DemoStore {
   _addNote: (note: Tables<"note">) => void;
   _updateNote: (id: string, note: Partial<Tables<"note">>) => void;
   _deleteNote: (id: string) => void;
-  _resetNotes: () => void;
+  _resetAll: () => void;
 }
 
 export interface Response<T> {

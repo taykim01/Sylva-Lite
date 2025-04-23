@@ -20,8 +20,8 @@ export function DemoHeader() {
   const { toggleViewMode, viewMode } = useDemo();
   const { signOut } = useAuth();
   const router = useRouter();
-  const toSignIn = () => {
-    signOut();
+  const toSignIn = async () => {
+    await signOut(true);
     router.push("/sign-in");
   };
 

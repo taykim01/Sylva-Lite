@@ -21,7 +21,7 @@ export function useAuth() {
       if (error) throw error;
       _setUser(data!);
       router.push("/dashboard");
-      toast("Signed in successfully");
+      toast("Signed in!");
     } catch (error) {
       setError(error as string);
       alert(error);
@@ -30,13 +30,13 @@ export function useAuth() {
     }
   };
 
-  const signOut = async () => {
+  const signOut = async (noToast?: boolean) => {
     setLoading(true);
     try {
       await handleSignOut();
       _resetUser();
       router.push("/sign-in");
-      toast("Signed out successfully");
+      if (!noToast) toast("Signed out!");
     } catch (error) {
       setError(error as string);
       alert(error);
@@ -53,7 +53,7 @@ export function useAuth() {
       if (error) throw error;
       _setUser(data!);
       router.push("/dashboard");
-      toast("Signed up successfully");
+      toast("Signed up!");
     } catch (error) {
       setError(error as string);
       alert(error);

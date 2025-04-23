@@ -10,8 +10,7 @@ import List from "./list";
 
 export default async function Page() {
   const { data: user } = await handleGetUser();
-  const userId = user?.id;
-  if (!user || userId === process.env.NEXT_PUBLIC_DEMO_ID) redirect("/sign-in");
+  if (!user) redirect("/sign-in");
 
   return (
     <Suspense fallback={<Spinner />}>

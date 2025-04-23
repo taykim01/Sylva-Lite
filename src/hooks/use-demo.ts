@@ -34,6 +34,7 @@ export function useDemo() {
     _addEdge,
     _updateEdge,
     _deleteEdge,
+    _resetAll,
   } = useDemoStore();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -99,10 +100,6 @@ export function useDemo() {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    readEdges();
-  }, []);
 
   const createNote = async () => {
     setLoading(true);
@@ -197,6 +194,7 @@ export function useDemo() {
   };
 
   useEffect(() => {
+    readEdges();
     readMyNotes();
   }, []);
 
@@ -204,6 +202,10 @@ export function useDemo() {
 
   const toggleViewMode = () => {
     _setViewMode(viewMode === "board" ? "list" : "board");
+  };
+
+  const resetDemo = () => {
+    _resetAll();
   };
 
   return {
@@ -224,5 +226,7 @@ export function useDemo() {
     createEdge,
     updateEdge,
     deleteEdge,
+    readEdges,
+    resetDemo,
   };
 }

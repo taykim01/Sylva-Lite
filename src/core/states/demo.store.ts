@@ -30,7 +30,7 @@ const useDemoStore = create<DemoStore>()(
         set((state) => ({
           notes: state.notes.filter((n) => n.id !== id),
         })),
-      _resetNotes: () => set({ notes: [] }),
+      _resetAll: () => set({ notes: [], edges: [] }),
     }),
     {
       name: "demo-store",
