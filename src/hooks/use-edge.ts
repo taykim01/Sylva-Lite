@@ -1,13 +1,13 @@
 "use client";
 
 import useEdgeStore from "@/core/states/edge.store";
-import { handleCreateEdge, handleDeleteEdge, handleGetEdges, handleUpdateEdge } from "@/features/edge-features";
+import { handleCreateEdge, handleDeleteEdge, handleUpdateEdge } from "@/features/edge-features";
 import { Position } from "@xyflow/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Tables } from "@/database.types";
 
 export function useEdge() {
-  const { edges, _setEdges, _addEdge, _updateEdge, _deleteEdge } = useEdgeStore();
+  const { edges, _addEdge, _updateEdge, _deleteEdge } = useEdgeStore();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,20 +22,6 @@ export function useEdge() {
       const { data, error } = await handleCreateEdge(sourceNoteId, targetNoteId, sourceHandle, targetHandle);
       if (error) throw error;
       _addEdge(data!);
-    } catch (error) {
-      setError(error as string);
-      alert(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const readEdges = async () => {
-    setLoading(true);
-    try {
-      const { data, error } = await handleGetEdges();
-      if (error) throw error;
-      _setEdges(data!);
     } catch (error) {
       setError(error as string);
       alert(error);
@@ -71,10 +57,6 @@ export function useEdge() {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    readEdges();
-  }, []);
 
   return {
     edges,

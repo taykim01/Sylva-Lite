@@ -7,6 +7,7 @@ import Spinner from "@/components/common/spinner";
 import { handleGetUser } from "@/features/auth-features";
 import { redirect } from "next/navigation";
 import List from "./list";
+import { DataLoader } from "./data-loader";
 
 export default async function Page() {
   const { data: user } = await handleGetUser();
@@ -20,6 +21,7 @@ export default async function Page() {
         <SideDrawer />
         <BottomItems />
       </Container>
+      <DataLoader />
     </Suspense>
   );
 }

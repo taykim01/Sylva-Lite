@@ -1,16 +1,16 @@
 "use client";
 
 import { useNoteStore } from "@/core/states";
-import { handleCreateEmptyNote, handleDeleteNote, handleGetMyNotes, handleUpdateNote } from "@/features/note-features";
+import { handleCreateEmptyNote, handleDeleteNote, handleUpdateNote } from "@/features/note-features";
 import { debounce } from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 
 export function useNote() {
   const searchParams = useSearchParams();
   const noteId = searchParams.get("note_id") as string | undefined;
-  const { notes, viewMode, _setNotes, _addNote, _updateNote, _deleteNote, _setViewMode } = useNoteStore();
+  const { notes, viewMode, _addNote, _updateNote, _deleteNote, _setViewMode } = useNoteStore();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -21,19 +21,6 @@ export function useNote() {
       const { data, error } = await handleCreateEmptyNote();
       if (error) throw error;
       _addNote(data!);
-    } catch (error) {
-      setError(error as string);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const readMyNotes = async () => {
-    setLoading(true);
-    try {
-      const { data, error } = await handleGetMyNotes();
-      if (error) throw error;
-      _setNotes(data!);
     } catch (error) {
       setError(error as string);
     } finally {
@@ -60,6 +47,7 @@ export function useNote() {
       const { error } = await handleDeleteNote(id);
       if (error) throw error;
       _deleteNote(id);
+      router.push("/dashboard");
       toast("Note deleted successfully");
     } catch (error) {
       setError(error as string);
@@ -107,10 +95,6 @@ export function useNote() {
     }
   };
 
-  useEffect(() => {
-    readMyNotes();
-  }, []);
-
   const currentNote = notes?.find((note) => note.id === noteId);
 
   const toggleViewMode = () => {
@@ -122,7 +106,6 @@ export function useNote() {
     loading,
     error,
     createNote,
-    readMyNotes,
     moveNote,
     deleteNote,
     currentNote,
