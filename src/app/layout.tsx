@@ -3,7 +3,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import localFont from "next/font/local";
 import { ReactNode } from "react";
-import Script from "next/script";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 export const metadata: Metadata = {
   title: "Sylva Board",
@@ -58,16 +58,9 @@ export default function RootLayout({
         <meta name="naver-site-verification" content="35ef34718a2f289d1ac5296c2e8837ddc55b4451" />
       </head>
       <body className={pretendard.variable}>
-        {children} <Toaster position="bottom-left" />
-        <Script src="https://www.googletagmanager.com/gtag/js?id=G-PEY6NYJ1MN" strategy="afterInteractive" />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-PEY6NYJ1MN');
-          `}
-        </Script>
+        {children}
+        <GoogleAnalytics gaId="G-PEY6NYJ1MN" />
+        <Toaster position="bottom-left" />
       </body>
     </html>
   );
