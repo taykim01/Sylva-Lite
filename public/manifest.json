@@ -2,7 +2,7 @@
   "name": "Sylva Board",
   "short_name": "Sylva",
   "description": "Your Personal Bulletin Board",
-  "start_url": "/dashboard",
+  "start_url": "/",
   "display": "fullscreen",
   "background_color": "#ffffff",
   "theme_color": "#A1A8B4",
