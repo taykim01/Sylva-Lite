@@ -67,10 +67,11 @@ export function DemoContent() {
         currentNote={currentNote || null}
         onDeleteNote={deleteNote}
         onEditNoteContent={editNoteContent}
-        redirectPath="/demo"
+        redirectPath="/dashboard"
         textEditorComponent={DemoTextEditor}
         notes={notes}
         debounceUpdate={debounceUpdate}
+        editNoteContent={editNoteContent}
       />
       <BaseBottomBar onCreateNote={createNote} />
     </BaseContainer>

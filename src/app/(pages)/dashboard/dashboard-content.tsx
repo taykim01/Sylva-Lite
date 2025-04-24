@@ -14,11 +14,11 @@ function DashboardTextEditor(props: BaseTextEditorProps) {
   return <BaseTextEditor {...props} />;
 }
 
-function DashboardNote(props: Tables<"note"> & { handle?: boolean }) {
-  const { notes, selectNote, deleteNote, debounceUpdate, createEdge, currentNote } = useDashboard();
+function DashboardNote(props: { data: Tables<"note">; handle?: boolean }) {
+  const { notes, selectNote, deleteNote, debounceUpdate, createEdge, currentNote, editNoteContent } = useDashboard();
   return (
     <BaseNote
-      note={props}
+      note={props.data}
       selectNote={selectNote}
       deleteNote={deleteNote}
       debounceUpdate={debounceUpdate}
@@ -71,6 +71,7 @@ export function DashboardContent({ userEmail }: { userEmail: string }) {
         textEditorComponent={DashboardTextEditor}
         notes={notes}
         debounceUpdate={debounceUpdate}
+        editNoteContent={editNoteContent}
       />
       <BaseBottomBar onCreateNote={createNote} />
     </BaseContainer>

@@ -120,7 +120,7 @@ export function BaseNote({
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-          <div className="flex flex-col gap-3 h-full nowheel overflow-scroll">
+          <div className="flex flex-col gap-3 h-full nowheel overflow-scroll no-scrollbar">
             <input
               className="text-b18 text-slate-800 outline-none w-full polymath"
               placeholder="New Note"

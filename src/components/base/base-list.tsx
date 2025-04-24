@@ -5,7 +5,8 @@ import { Tables } from "@/database.types";
 interface BaseListProps {
   notes: Tables<"note">[] | null;
   viewMode: "board" | "list";
-  noteComponent: React.ComponentType<Tables<"note">>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  noteComponent: React.ComponentType<any>;
 }
 
 export function BaseList({ notes, viewMode, noteComponent: NoteComponent }: BaseListProps) {
