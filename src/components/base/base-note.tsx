@@ -9,7 +9,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useSearchParams } from "next/navigation";
 import { Handles } from "../notes/handles";
 import Wrapper from "../notes/wrapper";
 import { Position } from "@xyflow/react";
@@ -53,24 +52,11 @@ export function BaseNote({
   currentNote,
 }: BaseNoteProps) {
   const [isHovered, setIsHovered] = useState(false);
-  const [noteSelected, setNoteSelected] = useState(false);
-  const searchParams = useSearchParams();
-  const noteId = searchParams.get("note_id");
   const [title, setTitle] = useState(note.title);
-  const [showOverlay, setShowOverlay] = useState(false);
 
   const dateToLocaleString = new Date(note.created_at).toLocaleString("en-US", {
     dateStyle: "short",
   });
-
-  useEffect(() => {
-    if (noteSelected) setShowOverlay(true);
-    else setShowOverlay(false);
-  }, [noteSelected]);
-
-  useEffect(() => {
-    setNoteSelected(noteId === note.id);
-  }, [noteId, note.id]);
 
   useEffect(() => {
     setTitle(note.title);
@@ -83,53 +69,50 @@ export function BaseNote({
   };
 
   return (
-    <>
-      <div
-        data-note-node
-        onClick={() => selectNote(note.id)}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        className="flex-shrink-0 w-full sm:w-[240px] h-[240px] bg-white border-t-4 border-slate-500 p-3 pb-4 cursor-pointer shadow relative"
-      >
-        {handle && <Handles note={note} isHovered={isHovered} createEdge={createEdge} />}
-        <div className="flex flex-col gap-2 h-full">
-          <div className="w-full flex justify-between items-center">
-            <div className="text-m14 text-slate-500 polymath">Note</div>
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <Wrapper onClick={(e) => e.stopPropagation()}>
-                  <Ellipsis size={20} className="text-slate-300" />
-                </Wrapper>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem
-                  variant="destructive"
-                  onClick={async (e) => {
-                    e.stopPropagation();
-                    await deleteNote(note.id);
-                  }}
-                >
-                  Delete
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-          <div className="flex flex-col gap-3 h-full nowheel overflow-scroll no-scrollbar">
-            <input
-              className="text-b18 text-slate-800 outline-none w-full polymath"
-              placeholder="New Note"
-              value={title || ""}
-              onChange={handleTitleChange}
-              onClick={(e) => e.stopPropagation()}
-            />
-            <div className="flex-grow relative">
-              <TextEditor noteId={note.id} notes={notes} debounceUpdate={debounceUpdate} currentNote={currentNote} />
-            </div>
-          </div>
-          <div className="text-r12 text-slate-500 flex justify-between">{dateToLocaleString}</div>
+    <div
+      data-note-node
+      onClick={() => selectNote(note.id)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="flex-shrink-0 w-full sm:w-[240px] h-[240px] bg-white border-t-4 border-slate-500 p-3 pb-4 cursor-pointer shadow relative"
+    >
+      {handle && <Handles note={note} isHovered={isHovered} createEdge={createEdge} />}
+      <div className="flex flex-col gap-2 h-full">
+        <div className="w-full flex justify-between items-center">
+          <div className="text-m14 text-slate-500 polymath">Note</div>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Wrapper onClick={(e) => e.stopPropagation()}>
+                <Ellipsis size={20} className="text-slate-300" />
+              </Wrapper>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem
+                variant="destructive"
+                onClick={async (e) => {
+                  e.stopPropagation();
+                  await deleteNote(note.id);
+                }}
+              >
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
+        <div className="flex flex-col gap-3 h-full nowheel overflow-scroll no-scrollbar">
+          <input
+            className="text-b18 text-slate-800 outline-none w-full polymath"
+            placeholder="New Note"
+            value={title || ""}
+            onChange={handleTitleChange}
+            onClick={(e) => e.stopPropagation()}
+          />
+          <div className="flex-grow relative">
+            <TextEditor noteId={note.id} notes={notes} debounceUpdate={debounceUpdate} currentNote={currentNote} />
+          </div>
+        </div>
+        <div className="text-r12 text-slate-500 flex justify-between">{dateToLocaleString}</div>
       </div>
-      {showOverlay && <div className="fixed sm:hidden inset-0 bg-black opacity-50 z-10 pointer-events-auto" />}
-    </>
+    </div>
   );
 }

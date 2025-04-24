@@ -15,11 +15,11 @@ function DemoTextEditor(props: BaseTextEditorProps) {
   return <BaseTextEditor {...props} />;
 }
 
-function DemoNote(props: Tables<"note"> & { handle?: boolean }) {
+function DemoNote(props: { data: Tables<"note">; handle?: boolean }) {
   const { notes, selectNote, deleteNote, debounceUpdate, createEdge, currentNote, viewMode } = useDemo();
   return (
     <BaseNote
-      note={props}
+      note={props.data}
       handle={viewMode === "board"}
       selectNote={selectNote}
       deleteNote={deleteNote}
@@ -68,7 +68,7 @@ export function DemoContent() {
         currentNote={currentNote || null}
         onDeleteNote={deleteNote}
         onEditNoteContent={editNoteContent}
-        redirectPath="/dashboard"
+        redirectPath="/demo"
         textEditorComponent={DemoTextEditor}
         notes={notes}
         debounceUpdate={debounceUpdate}

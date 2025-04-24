@@ -26,6 +26,8 @@ export function Handles({ note, isHovered, createEdge }: HandlesProps) {
     background: "#64748b",
     width: "8px",
     height: "8px",
+    cursor: "pointer",
+    transform: "translate(-50%, -50%)",
   };
 
   const targetHandleStyle = {
@@ -42,7 +44,8 @@ export function Handles({ note, isHovered, createEdge }: HandlesProps) {
         onConnect={onConnect}
         style={{
           ...handleStyle,
-          right: "-4px",
+          right: "-8px",
+          top: "50%",
         }}
         className="hidden sm:block"
       />
@@ -53,7 +56,7 @@ export function Handles({ note, isHovered, createEdge }: HandlesProps) {
         onConnect={onConnect}
         style={{
           ...handleStyle,
-          left: "-4px",
+          top: "50%",
         }}
         className="hidden sm:block"
       />
@@ -65,6 +68,7 @@ export function Handles({ note, isHovered, createEdge }: HandlesProps) {
         style={{
           ...handleStyle,
           top: "-4px",
+          left: "50%",
         }}
         className="hidden sm:block"
       />
@@ -75,7 +79,8 @@ export function Handles({ note, isHovered, createEdge }: HandlesProps) {
         onConnect={onConnect}
         style={{
           ...handleStyle,
-          bottom: "-4px",
+          bottom: "-8px",
+          left: "50%",
         }}
         className="hidden sm:block"
       />
@@ -89,6 +94,7 @@ export function Handles({ note, isHovered, createEdge }: HandlesProps) {
         style={{
           ...targetHandleStyle,
           right: "-4px",
+          top: "50%",
         }}
         className="hidden sm:block"
       />
@@ -100,6 +106,7 @@ export function Handles({ note, isHovered, createEdge }: HandlesProps) {
         style={{
           ...targetHandleStyle,
           left: "-4px",
+          top: "50%",
         }}
         className="hidden sm:block"
       />
@@ -111,6 +118,7 @@ export function Handles({ note, isHovered, createEdge }: HandlesProps) {
         style={{
           ...targetHandleStyle,
           top: "-4px",
+          left: "50%",
         }}
         className="hidden sm:block"
       />
@@ -122,6 +130,7 @@ export function Handles({ note, isHovered, createEdge }: HandlesProps) {
         style={{
           ...targetHandleStyle,
           bottom: "-4px",
+          left: "50%",
         }}
         className="hidden sm:block"
       />

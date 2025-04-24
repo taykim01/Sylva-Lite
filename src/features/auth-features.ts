@@ -80,7 +80,6 @@ export async function handleGetUser(): Promise<Response<User>> {
   const { data: user } = await supabase.auth.getUser();
   const userData = user?.user;
   if (!userData) {
-    console.error("Error getting user: User not found");
     return { data: null, error: "User not found" };
   }
   return { data: userData, error: null };

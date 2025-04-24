@@ -167,7 +167,7 @@ const SlashCommands = Extension.create({
         },
         render: () => {
           let component: HTMLElement;
-          let popup: ReturnType<typeof tippy>;
+          let popup: ReturnType<typeof tippy> | null;
 
           return {
             onStart: (props: SuggestionProps) => {
@@ -176,6 +176,9 @@ const SlashCommands = Extension.create({
               const isDrawerOpen = editorElement.getAttribute("data-is-drawer-open");
               console.log(editorId, isDrawerOpen);
               if (editorId === "note" && isDrawerOpen === "true") return;
+
+              popup = null;
+
               component = document.createElement("div");
               component.className = "slash-menu";
               component.setAttribute("data-slash-command", "");
@@ -197,42 +200,64 @@ const SlashCommands = Extension.create({
                 menuItem.addEventListener("click", (e) => {
                   e.stopPropagation();
                   item.command(props);
-                  popup?.[0]?.hide();
+                  if (popup?.[0]) {
+                    popup[0].hide();
+                  }
                 });
 
                 component.appendChild(menuItem);
               });
 
-              popup = tippy("body", {
-                getReferenceClientRect: props.clientRect,
-                appendTo: () => document.body,
-                content: component,
-                showOnCreate: true,
-                interactive: true,
-                trigger: "manual",
-                placement: "bottom-start",
-                theme: "light",
-                onCreate: (instance) => {
-                  instance.popper.setAttribute("data-dropdown-menu", "");
-                  instance.popper.setAttribute("data-editor-id", editorId || "");
-                },
-              });
+              try {
+                popup = tippy("body", {
+                  getReferenceClientRect: props.clientRect,
+                  appendTo: () => document.body,
+                  content: component,
+                  showOnCreate: true,
+                  interactive: true,
+                  trigger: "manual",
+                  placement: "bottom-start",
+                  theme: "light",
+                  onCreate: (instance) => {
+                    instance.popper.setAttribute("data-dropdown-menu", "");
+                    instance.popper.setAttribute("data-editor-id", editorId || "");
+                  },
+                });
+              } catch (error) {
+                console.error("Failed to initialize tippy popup:", error);
+              }
             },
             onUpdate: (props: SuggestionProps) => {
-              popup[0].setProps({
-                getReferenceClientRect: props.clientRect,
-              });
+              if (popup?.[0]) {
+                try {
+                  popup[0].setProps({
+                    getReferenceClientRect: props.clientRect,
+                  });
+                } catch (error) {
+                  console.error("Failed to update tippy popup:", error);
+                }
+              }
             },
             onKeyDown: (props: { event: KeyboardEvent }) => {
               if (props.event.key === "Escape") {
-                popup[0].hide();
+                if (popup?.[0]) {
+                  try {
+                    popup[0].hide();
+                  } catch (error) {
+                    console.error("Failed to hide tippy popup:", error);
+                  }
+                }
                 return true;
               }
               return false;
             },
             onExit: () => {
-              if (popup && popup[0]) {
-                popup[0].destroy();
+              if (popup?.[0]) {
+                try {
+                  popup[0].destroy();
+                } catch (error) {
+                  console.error("Failed to destroy tippy popup:", error);
+                }
               }
               if (component) {
                 component.remove();

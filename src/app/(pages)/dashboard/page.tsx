@@ -4,6 +4,7 @@ import { handleGetUser } from "@/features/auth-features";
 import { redirect } from "next/navigation";
 import { DataLoader } from "./data-loader";
 import { DashboardContent } from "./dashboard-content";
+import { BaseOverlay } from "@/components/base/base-overlay";
 
 export default async function Page() {
   const { data: user } = await handleGetUser();
@@ -13,6 +14,7 @@ export default async function Page() {
     <Suspense fallback={<Spinner />}>
       <DashboardContent userEmail={user.email || "User"} />
       <DataLoader />
+      <BaseOverlay />
     </Suspense>
   );
 }

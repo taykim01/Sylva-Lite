@@ -169,3 +169,20 @@
 .polymath {
   font-family: Polymath, sans-serif;
 }
+
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar::-webkit-scrollbar-thumb {
+  display: none;
+}
+
+.no-scrollbar::-webkit-scrollbar-track {
+  display: none;
+}

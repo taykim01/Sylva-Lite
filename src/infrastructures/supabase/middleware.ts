@@ -5,8 +5,8 @@ export async function updateSession(request: NextRequest) {
   try {
     let response = NextResponse.next({
       request: {
-        headers: request.headers
-      }
+        headers: request.headers,
+      },
     });
 
     const supabase = createServerClient(
@@ -21,13 +21,13 @@ export async function updateSession(request: NextRequest) {
             try {
               cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
               response = NextResponse.next({
-                request
+                request,
               });
               cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
             } catch {}
-          }
-        }
-      }
+          },
+        },
+      },
     );
     const user = await supabase.auth.getUser();
 
@@ -43,8 +43,8 @@ export async function updateSession(request: NextRequest) {
   } catch {
     return NextResponse.next({
       request: {
-        headers: request.headers
-      }
+        headers: request.headers,
+      },
     });
   }
 }
