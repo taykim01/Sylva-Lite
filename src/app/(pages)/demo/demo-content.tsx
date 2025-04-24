@@ -16,10 +16,11 @@ function DemoTextEditor(props: BaseTextEditorProps) {
 }
 
 function DemoNote(props: Tables<"note"> & { handle?: boolean }) {
-  const { notes, selectNote, deleteNote, debounceUpdate, createEdge, currentNote } = useDemo();
+  const { notes, selectNote, deleteNote, debounceUpdate, createEdge, currentNote, viewMode } = useDemo();
   return (
     <BaseNote
       note={props}
+      handle={viewMode === "board"}
       selectNote={selectNote}
       deleteNote={deleteNote}
       debounceUpdate={debounceUpdate}

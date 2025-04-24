@@ -15,10 +15,11 @@ function DashboardTextEditor(props: BaseTextEditorProps) {
 }
 
 function DashboardNote(props: { data: Tables<"note">; handle?: boolean }) {
-  const { notes, selectNote, deleteNote, debounceUpdate, createEdge, currentNote, editNoteContent } = useDashboard();
+  const { notes, selectNote, deleteNote, debounceUpdate, createEdge, currentNote, viewMode } = useDashboard();
   return (
     <BaseNote
       note={props.data}
+      handle={viewMode === "board"}
       selectNote={selectNote}
       deleteNote={deleteNote}
       debounceUpdate={debounceUpdate}
