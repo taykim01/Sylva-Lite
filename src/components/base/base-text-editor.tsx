@@ -1,6 +1,6 @@
 "use client";
 
-import "./text-editor.scss";
+import "../notes/text-editor.scss";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { Color } from "@tiptap/extension-color";
@@ -17,13 +17,29 @@ import Link from "@tiptap/extension-link";
 import Highlight from "@tiptap/extension-highlight";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/themes/light.css";
-import { useDashboard } from "@/hooks/use-dashboard";
 import { useEffect } from "react";
-import SlashCommands from "./slash-commands";
+import SlashCommands from "../notes/slash-commands";
+import { Tables } from "@/database.types";
+import { DebouncedFunc } from "lodash";
 
-export function TextEditor(props: { noteId: string; isSideDrawer?: boolean }) {
-  const { notes, debounceUpdate, currentNote } = useDashboard();
-  const note = notes?.find((note) => note.id === props.noteId);
+export interface BaseTextEditorProps {
+  noteId: string;
+  isSideDrawer?: boolean;
+  notes: Tables<"note">[];
+  debounceUpdate: DebouncedFunc<
+    (
+      id: string,
+      updates: Partial<{
+        title: string;
+        content: string;
+      }>,
+    ) => Promise<void>
+  >;
+  currentNote?: Tables<"note">;
+}
+
+export function BaseTextEditor(props: BaseTextEditorProps) {
+  const note = props.notes?.find((note) => note.id === props.noteId);
   const editor = useEditor({
     immediatelyRender: false,
     extensions: [
@@ -54,7 +70,7 @@ export function TextEditor(props: { noteId: string; isSideDrawer?: boolean }) {
     content: note?.content,
     onUpdate: ({ editor }) => {
       const content = editor.getHTML();
-      debounceUpdate(props.noteId, { content });
+      props.debounceUpdate(props.noteId, { content });
     },
   });
 
@@ -68,9 +84,9 @@ export function TextEditor(props: { noteId: string; isSideDrawer?: boolean }) {
     if (editor) {
       const editorElement = editor.view.dom;
       editorElement.setAttribute("data-editor-id", props.isSideDrawer ? "side-drawer" : "note");
-      editorElement.setAttribute("data-is-drawer-open", currentNote ? "true" : "false");
+      editorElement.setAttribute("data-is-drawer-open", props.currentNote ? "true" : "false");
     }
-  }, [editor, props.isSideDrawer, currentNote]);
+  }, [editor, props.isSideDrawer, props.currentNote]);
 
   return (
     <div className="notion-style-editor" data-dropdown-menu>

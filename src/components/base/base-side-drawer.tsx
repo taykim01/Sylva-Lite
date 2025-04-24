@@ -12,15 +12,19 @@ import {
 import { ChevronsRight, TrashIcon } from "lucide-react";
 import { AlertDialogHeader, AlertDialogFooter } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import Wrapper from "./wrapper";
 import { Tables } from "@/database.types";
+import Wrapper from "../notes/wrapper";
+import { BaseTextEditorProps } from "./base-text-editor";
+import { DebouncedFunc } from "lodash";
 
 interface BaseSideDrawerProps {
   currentNote: Tables<"note"> | null;
   onDeleteNote: (id: string) => Promise<void>;
   onEditNoteContent: (id: string, updates: Partial<{ title: string; content: string }>) => Promise<void>;
   redirectPath: string;
-  textEditorComponent: React.ComponentType<{ noteId: string; isSideDrawer?: boolean }>;
+  textEditorComponent: React.ComponentType<BaseTextEditorProps>;
+  notes: Tables<"note">[];
+  debounceUpdate: DebouncedFunc<(id: string, updates: Partial<{ title: string; content: string }>) => Promise<void>>;
 }
 
 export function BaseSideDrawer({
@@ -28,6 +32,8 @@ export function BaseSideDrawer({
   onDeleteNote,
   redirectPath,
   textEditorComponent: TextEditor,
+  notes,
+  debounceUpdate,
 }: BaseSideDrawerProps) {
   const divRef = useRef<HTMLDivElement>(null);
   const { resetFocus } = useClickOutside({
@@ -110,7 +116,13 @@ export function BaseSideDrawer({
           </div>
         </div>
         <div className="px-5 sm:px-10 pt-5 h-full my-8 overflow-scroll" data-dropdown-menu>
-          <TextEditor noteId={currentNote.id} isSideDrawer />
+          <TextEditor
+            noteId={currentNote.id}
+            isSideDrawer
+            notes={notes}
+            debounceUpdate={debounceUpdate}
+            currentNote={currentNote}
+          />
         </div>
       </div>
     </div>

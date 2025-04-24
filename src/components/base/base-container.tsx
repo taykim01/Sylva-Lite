@@ -9,12 +9,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown, Rocket } from "lucide-react";
+import { ChevronDown, LogOut, Rocket } from "lucide-react";
 import { Switch } from "../ui/switch";
 import { Label } from "../ui/label";
 import { useAuth } from "@/hooks/use-auth";
 import { useRouter } from "next/navigation";
-import { FeatureRequestMenu } from "./feature-request-menu";
+import { FeatureRequestMenu } from "../layout/feature-request-menu";
 
 interface BaseContainerProps {
   children: ReactNode;
@@ -23,6 +23,7 @@ interface BaseContainerProps {
   onToggleViewMode: () => void;
   accountName: string;
   showTryButton?: boolean;
+  showSignOutButton?: boolean;
 }
 
 export function BaseContainer({
@@ -32,6 +33,7 @@ export function BaseContainer({
   onToggleViewMode,
   accountName,
   showTryButton = false,
+  showSignOutButton = false,
 }: BaseContainerProps) {
   const { signOut } = useAuth();
   const router = useRouter();
@@ -65,6 +67,12 @@ export function BaseContainer({
                 </DropdownMenuItem>
               )}
               <FeatureRequestMenu />
+              {showSignOutButton && (
+                <DropdownMenuItem onClick={toSignIn}>
+                  <LogOut size={16} className="text-slate-600" />
+                  Sign Out
+                </DropdownMenuItem>
+              )}
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>

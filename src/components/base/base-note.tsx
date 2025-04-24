@@ -9,24 +9,59 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { DemoTextEditor } from "./demo-text-editor";
 import { useSearchParams } from "next/navigation";
-import { useDemo } from "@/hooks/use-demo";
 import { Handles } from "../notes/handles";
 import Wrapper from "../notes/wrapper";
+import { Position } from "@xyflow/react";
+import { DebouncedFunc } from "lodash";
+import { BaseTextEditorProps } from "./base-text-editor";
 
-export function DemoNote(props: Tables<"note"> & { handle?: boolean }) {
-  const { selectNote, deleteNote, debounceUpdate, createEdge } = useDemo();
+type BaseNoteProps = {
+  note: Tables<"note">;
+  handle?: boolean;
+  selectNote: (id: string) => void;
+  deleteNote: (id: string) => Promise<void>;
+  debounceUpdate: DebouncedFunc<
+    (
+      id: string,
+      updates: Partial<{
+        title: string;
+        content: string;
+      }>,
+    ) => Promise<void>
+  >;
+  createEdge: (
+    sourceNoteId: string,
+    targetNoteId: string,
+    sourceHandle: Position,
+    targetHandle: Position,
+  ) => Promise<void>;
+  textEditorComponent: React.ComponentType<BaseTextEditorProps>;
+  notes: Tables<"note">[];
+  currentNote: Tables<"note"> | undefined;
+};
+
+export function BaseNote({
+  note,
+  handle,
+  selectNote,
+  deleteNote,
+  debounceUpdate,
+  createEdge,
+  textEditorComponent: TextEditor,
+  notes,
+  currentNote,
+}: BaseNoteProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [noteSelected, setNoteSelected] = useState(false);
   const searchParams = useSearchParams();
   const noteId = searchParams.get("note_id");
+  const [title, setTitle] = useState(note.title);
+  const [showOverlay, setShowOverlay] = useState(false);
 
-  const dateToLocaleString = new Date(props.created_at).toLocaleString("en-US", {
+  const dateToLocaleString = new Date(note.created_at).toLocaleString("en-US", {
     dateStyle: "short",
   });
-
-  const [showOverlay, setShowOverlay] = useState(false);
 
   useEffect(() => {
     if (noteSelected) {
@@ -40,33 +75,29 @@ export function DemoNote(props: Tables<"note"> & { handle?: boolean }) {
   }, [noteSelected]);
 
   useEffect(() => {
-    if (noteId === props.id) {
-      setNoteSelected(true);
-    } else {
-      setNoteSelected(false);
-    }
-  }, [noteId]);
+    setNoteSelected(noteId === note.id);
+  }, [noteId, note.id]);
 
-  const [title, setTitle] = useState(props?.title);
+  useEffect(() => {
+    setTitle(note.title);
+  }, [note.title]);
+
   const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newTitle = e.target.value;
     setTitle(newTitle);
-    debounceUpdate(props.id, { title: newTitle });
+    debounceUpdate(note.id, { title: newTitle });
   };
-  useEffect(() => {
-    setTitle(props?.title);
-  }, [props?.title]);
 
   return (
     <>
       <div
         data-note-node
-        onClick={() => selectNote(props.id)}
+        onClick={() => selectNote(note.id)}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         className="flex-shrink-0 w-full sm:w-[240px] h-[240px] bg-white border-t-4 border-slate-500 p-3 pb-4 cursor-pointer shadow relative"
       >
-        {props.handle && <Handles note={props} isHovered={isHovered} createEdge={createEdge} />}
+        {handle && <Handles note={note} isHovered={isHovered} createEdge={createEdge} />}
         <div className="flex flex-col gap-2 h-full">
           <div className="w-full flex justify-between items-center">
             <div className="text-m14 text-slate-500 polymath">Note</div>
@@ -81,7 +112,7 @@ export function DemoNote(props: Tables<"note"> & { handle?: boolean }) {
                   variant="destructive"
                   onClick={async (e) => {
                     e.stopPropagation();
-                    await deleteNote(props.id);
+                    await deleteNote(note.id);
                   }}
                 >
                   Delete
@@ -93,12 +124,12 @@ export function DemoNote(props: Tables<"note"> & { handle?: boolean }) {
             <input
               className="text-b18 text-slate-800 outline-none w-full polymath"
               placeholder="New Note"
-              value={title}
+              value={title || ""}
               onChange={handleTitleChange}
               onClick={(e) => e.stopPropagation()}
             />
             <div className="flex-grow relative">
-              <DemoTextEditor noteId={props.id} />
+              <TextEditor noteId={note.id} notes={notes} debounceUpdate={debounceUpdate} currentNote={currentNote} />
             </div>
           </div>
           <div className="text-r12 text-slate-500 flex justify-between">{dateToLocaleString}</div>
