@@ -72,7 +72,6 @@ export function DashboardContent({ userEmail }: { userEmail: string }) {
         textEditorComponent={DashboardTextEditor}
         notes={notes}
         debounceUpdate={debounceUpdate}
-        editNoteContent={editNoteContent}
       />
       <BaseBottomBar onCreateNote={createNote} />
     </BaseContainer>

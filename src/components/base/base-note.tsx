@@ -64,14 +64,8 @@ export function BaseNote({
   });
 
   useEffect(() => {
-    if (noteSelected) {
-      setShowOverlay(true);
-    } else {
-      const timer = setTimeout(() => {
-        setShowOverlay(false);
-      }, 300);
-      return () => clearTimeout(timer);
-    }
+    if (noteSelected) setShowOverlay(true);
+    else setShowOverlay(false);
   }, [noteSelected]);
 
   useEffect(() => {

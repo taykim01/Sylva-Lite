@@ -72,7 +72,6 @@ export function DemoContent() {
         textEditorComponent={DemoTextEditor}
         notes={notes}
         debounceUpdate={debounceUpdate}
-        editNoteContent={editNoteContent}
       />
       <BaseBottomBar onCreateNote={createNote} />
     </BaseContainer>

@@ -25,13 +25,6 @@ interface BaseSideDrawerProps {
   textEditorComponent: React.ComponentType<BaseTextEditorProps>;
   notes: Tables<"note">[];
   debounceUpdate: DebouncedFunc<(id: string, updates: Partial<{ title: string; content: string }>) => Promise<void>>;
-  editNoteContent: (
-    id: string,
-    updates: Partial<{
-      title: string;
-      content: string;
-    }>,
-  ) => Promise<void>;
 }
 
 export function BaseSideDrawer({
@@ -41,7 +34,7 @@ export function BaseSideDrawer({
   textEditorComponent: TextEditor,
   notes,
   debounceUpdate,
-  editNoteContent,
+  onEditNoteContent,
 }: BaseSideDrawerProps) {
   const divRef = useRef<HTMLDivElement>(null);
   const { resetFocus } = useClickOutside({
@@ -74,19 +67,13 @@ export function BaseSideDrawer({
     };
   }, [currentNote, resetFocus]);
 
-  if (!currentNote) return null;
-
   return (
     <div
       ref={divRef}
       className={`
-        fixed right-0 bg-white border-t-8 border-slate-500
-        ${
-          currentNote
-            ? "translate-y-[10%] sm:translate-x-0 sm:translate-y-0"
-            : "translate-y-full sm:translate-x-full sm:translate-y-0"
-        }
-        top-0 transition-all duration-500 bottom-0 w-full sm:w-1/2 max-w-[720px] flex flex-col shadow-lg
+        fixed bg-white border-t-8 border-slate-500
+        ${currentNote ? "translate-y-[10%] sm:translate-0" : "translate-y-full sm:translate-x-full sm:translate-y-0"}
+        top-0 transition-all duration-500 ease-in-out sm:right-0 bottom-0 w-full sm:w-1/2 max-w-[720px] flex flex-col shadow-lg
       `}
       style={{
         zIndex: 50,
@@ -105,7 +92,7 @@ export function BaseSideDrawer({
               <input
                 className="text-b18 sm:text-b32 text-slate-900 outline-none polymath"
                 value={currentNote.title || ""}
-                onChange={async (e) => await editNoteContent(currentNote.id, { title: e.target.value })}
+                onChange={async (e) => await onEditNoteContent(currentNote.id, { title: e.target.value })}
                 placeholder="New Note"
               />
               <AlertDialog open={dialog} onOpenChange={setDialog}>
