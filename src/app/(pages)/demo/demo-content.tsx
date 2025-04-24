@@ -15,7 +15,7 @@ function DemoTextEditor(props: BaseTextEditorProps) {
   return <BaseTextEditor {...props} />;
 }
 
-function DemoNote(props: { data: Tables<"note">; handle?: boolean }) {
+function DemoNote(props: { data: Tables<"note"> }) {
   const { notes, selectNote, deleteNote, debounceUpdate, createEdge, currentNote, viewMode } = useDemo();
   return (
     <BaseNote

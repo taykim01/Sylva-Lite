@@ -5,8 +5,7 @@ import { Tables } from "@/database.types";
 interface BaseListProps {
   notes: Tables<"note">[] | null;
   viewMode: "board" | "list";
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  noteComponent: React.ComponentType<any>;
+  noteComponent: React.ComponentType<{ data: Tables<"note"> }>;
 }
 
 export function BaseList({ notes, viewMode, noteComponent: NoteComponent }: BaseListProps) {
@@ -15,7 +14,7 @@ export function BaseList({ notes, viewMode, noteComponent: NoteComponent }: Base
   return (
     <div className="absolute inset-0 flex sm:flex-wrap flex-col sm:flex-row sm:items-start gap-2 sm:gap-5 content-start p-5 overflow-y-auto bg-gray-50">
       {notes?.map((note) => (
-        <NoteComponent key={note.id} {...note} />
+        <NoteComponent key={note.id} data={note} />
       ))}
     </div>
   );

@@ -14,7 +14,7 @@ function DashboardTextEditor(props: BaseTextEditorProps) {
   return <BaseTextEditor {...props} />;
 }
 
-function DashboardNote(props: { data: Tables<"note">; handle?: boolean }) {
+function DashboardNote(props: { data: Tables<"note"> }) {
   const { notes, selectNote, deleteNote, debounceUpdate, createEdge, currentNote, viewMode } = useDashboard();
   return (
     <BaseNote
