@@ -140,7 +140,7 @@ export function BaseSideDrawer({
               <div className="text-slate-700">{date}</div>
             </div>
           </div>
-          <div className="px-5 sm:px-10 pt-5 h-full my-8 overflow-scroll" data-dropdown-menu>
+          <div className="px-5 sm:px-10 pt-8 h-full overflow-scroll no-scrollbar" data-dropdown-menu>
             <TextEditor
               noteId={currentNote.id}
               isSideDrawer

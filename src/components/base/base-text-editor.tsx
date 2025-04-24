@@ -15,6 +15,7 @@ import TableHeader from "@tiptap/extension-table-header";
 import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
 import Highlight from "@tiptap/extension-highlight";
+import Placeholder from "@tiptap/extension-placeholder";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/themes/light.css";
 import { useEffect } from "react";
@@ -44,6 +45,12 @@ export function BaseTextEditor(props: BaseTextEditorProps) {
     immediatelyRender: false,
     extensions: [
       StarterKit,
+      Placeholder.configure({
+        placeholder: props.isSideDrawer ? "Start typing..." : "",
+        showOnlyWhenEditable: true,
+        emptyEditorClass: "is-editor-empty",
+        emptyNodeClass: "is-empty",
+      }),
       Color.configure({ types: [TextStyle.name, ListItem.name] }),
       TextStyle,
       TaskList,
@@ -89,7 +96,7 @@ export function BaseTextEditor(props: BaseTextEditorProps) {
   }, [editor, props.isSideDrawer, props.currentNote]);
 
   return (
-    <div className="notion-style-editor" data-dropdown-menu>
+    <div className="notion-style-editor h-full" data-dropdown-menu>
       <EditorContent
         editor={editor}
         className="prose max-w-none focus:outline-none cursor-text h-full"
