@@ -8,11 +8,14 @@ import { BaseSideDrawer } from "@/components/base/base-side-drawer";
 import { useDashboard } from "@/hooks/use-dashboard";
 import { BaseNote } from "@/components/base/base-note";
 import { Tables } from "@/database.types";
-import { BaseTextEditor, BaseTextEditorProps } from "@/components/base/base-text-editor";
+import { BaseTextEditor, BaseTextEditorProps, BaseTextEditorRef } from "@/components/base/base-text-editor";
+import { forwardRef } from "react";
 
-function DashboardTextEditor(props: BaseTextEditorProps) {
-  return <BaseTextEditor {...props} />;
-}
+const DashboardTextEditor = forwardRef<BaseTextEditorRef, BaseTextEditorProps>((props, ref) => {
+  return <BaseTextEditor {...props} ref={ref} />;
+});
+
+DashboardTextEditor.displayName = "DashboardTextEditor";
 
 function DashboardNote(props: { data: Tables<"note"> }) {
   const { notes, selectNote, deleteNote, debounceUpdate, createEdge, currentNote, viewMode } = useDashboard();

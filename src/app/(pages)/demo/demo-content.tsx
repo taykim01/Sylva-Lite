@@ -8,12 +8,14 @@ import { BaseSideDrawer } from "@/components/base/base-side-drawer";
 import { useDemo } from "@/hooks/use-demo";
 import { Tables } from "@/database.types";
 import { BaseNote } from "@/components/base/base-note";
-import { BaseTextEditor } from "@/components/base/base-text-editor";
-import { BaseTextEditorProps } from "@/components/base/base-text-editor";
+import { BaseTextEditor, BaseTextEditorProps, BaseTextEditorRef } from "@/components/base/base-text-editor";
+import { forwardRef } from "react";
 
-function DemoTextEditor(props: BaseTextEditorProps) {
-  return <BaseTextEditor {...props} />;
-}
+const DemoTextEditor = forwardRef<BaseTextEditorRef, BaseTextEditorProps>((props, ref) => {
+  return <BaseTextEditor {...props} ref={ref} />;
+});
+
+DemoTextEditor.displayName = "DemoTextEditor";
 
 function DemoNote(props: { data: Tables<"note"> }) {
   const { notes, selectNote, deleteNote, debounceUpdate, createEdge, currentNote, viewMode } = useDemo();
