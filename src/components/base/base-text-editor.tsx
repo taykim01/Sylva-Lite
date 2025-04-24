@@ -18,7 +18,7 @@ import Highlight from "@tiptap/extension-highlight";
 import Placeholder from "@tiptap/extension-placeholder";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/themes/light.css";
-import { useEffect } from "react";
+import { useEffect, forwardRef, useImperativeHandle } from "react";
 import SlashCommands from "../notes/slash-commands";
 import { Tables } from "@/database.types";
 import { DebouncedFunc } from "lodash";
@@ -39,7 +39,15 @@ export interface BaseTextEditorProps {
   currentNote?: Tables<"note">;
 }
 
-export function BaseTextEditor(props: BaseTextEditorProps) {
+export interface BaseTextEditorRef {
+  editor: {
+    commands: {
+      focus: () => void;
+    };
+  };
+}
+
+export const BaseTextEditor = forwardRef<BaseTextEditorRef, BaseTextEditorProps>((props, ref) => {
   const note = props.notes?.find((note) => note.id === props.noteId);
   const editor = useEditor({
     immediatelyRender: false,
@@ -81,6 +89,18 @@ export function BaseTextEditor(props: BaseTextEditorProps) {
     },
   });
 
+  useImperativeHandle(
+    ref,
+    () => ({
+      editor: {
+        commands: {
+          focus: () => editor?.commands.focus(),
+        },
+      },
+    }),
+    [editor],
+  );
+
   useEffect(() => {
     if (editor && note?.content !== editor.getHTML()) {
       editor.commands.setContent(note?.content || "");
@@ -104,4 +124,6 @@ export function BaseTextEditor(props: BaseTextEditorProps) {
       />
     </div>
   );
-}
+});
+
+BaseTextEditor.displayName = "BaseTextEditor";

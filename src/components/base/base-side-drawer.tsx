@@ -14,7 +14,7 @@ import { AlertDialogHeader, AlertDialogFooter } from "@/components/ui/alert-dial
 import { Button } from "@/components/ui/button";
 import { Tables } from "@/database.types";
 import Wrapper from "../notes/wrapper";
-import { BaseTextEditorProps } from "./base-text-editor";
+import { BaseTextEditorProps, BaseTextEditorRef } from "./base-text-editor";
 import { DebouncedFunc } from "lodash";
 
 interface BaseSideDrawerProps {
@@ -22,7 +22,7 @@ interface BaseSideDrawerProps {
   onDeleteNote: (id: string) => Promise<void>;
   onEditNoteContent: (id: string, updates: Partial<{ title: string; content: string }>) => Promise<void>;
   redirectPath: string;
-  textEditorComponent: React.ComponentType<BaseTextEditorProps>;
+  textEditorComponent: React.ForwardRefExoticComponent<BaseTextEditorProps & React.RefAttributes<BaseTextEditorRef>>;
   notes: Tables<"note">[];
   debounceUpdate: DebouncedFunc<(id: string, updates: Partial<{ title: string; content: string }>) => Promise<void>>;
 }
@@ -37,6 +37,7 @@ export function BaseSideDrawer({
   onEditNoteContent,
 }: BaseSideDrawerProps) {
   const divRef = useRef<HTMLDivElement>(null);
+  const editorRef = useRef<BaseTextEditorRef>(null);
   const { resetFocus } = useClickOutside({
     ref: divRef,
     redirectPath,
@@ -67,6 +68,13 @@ export function BaseSideDrawer({
     };
   }, [currentNote, resetFocus]);
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      editorRef.current?.editor?.commands?.focus();
+    }
+  };
+
   return (
     <div
       ref={divRef}
@@ -93,6 +101,7 @@ export function BaseSideDrawer({
                 className="text-b18 sm:text-b32 text-slate-900 outline-none polymath"
                 value={currentNote.title || ""}
                 onChange={async (e) => await onEditNoteContent(currentNote.id, { title: e.target.value })}
+                onKeyDown={handleKeyDown}
                 placeholder="New Note"
               />
               <AlertDialog open={dialog} onOpenChange={setDialog}>
@@ -142,6 +151,7 @@ export function BaseSideDrawer({
           </div>
           <div className="px-5 sm:px-10 pt-8 h-full overflow-scroll no-scrollbar" data-dropdown-menu>
             <TextEditor
+              ref={editorRef}
               noteId={currentNote.id}
               isSideDrawer
               notes={notes}

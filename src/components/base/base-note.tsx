@@ -1,7 +1,7 @@
 "use client";
 
 import { Tables } from "@/database.types";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState, useRef } from "react";
 import { Ellipsis } from "lucide-react";
 import {
   DropdownMenu,
@@ -13,7 +13,7 @@ import { Handles } from "../notes/handles";
 import Wrapper from "../notes/wrapper";
 import { Position } from "@xyflow/react";
 import { DebouncedFunc } from "lodash";
-import { BaseTextEditorProps } from "./base-text-editor";
+import { BaseTextEditorProps, BaseTextEditorRef } from "./base-text-editor";
 
 type BaseNoteProps = {
   note: Tables<"note">;
@@ -35,7 +35,7 @@ type BaseNoteProps = {
     sourceHandle: Position,
     targetHandle: Position,
   ) => Promise<void>;
-  textEditorComponent: React.ComponentType<BaseTextEditorProps>;
+  textEditorComponent: React.ForwardRefExoticComponent<BaseTextEditorProps & React.RefAttributes<BaseTextEditorRef>>;
   notes: Tables<"note">[];
   currentNote: Tables<"note"> | undefined;
 };
@@ -53,6 +53,7 @@ export function BaseNote({
 }: BaseNoteProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [title, setTitle] = useState(note.title);
+  const editorRef = useRef<{ editor: { commands: { focus: () => void } } }>(null);
 
   const dateToLocaleString = new Date(note.created_at).toLocaleString("en-US", {
     dateStyle: "short",
@@ -66,6 +67,13 @@ export function BaseNote({
     const newTitle = e.target.value;
     setTitle(newTitle);
     debounceUpdate(note.id, { title: newTitle });
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      editorRef.current?.editor?.commands?.focus();
+    }
   };
 
   return (
@@ -105,10 +113,17 @@ export function BaseNote({
             placeholder="New Note"
             value={title || ""}
             onChange={handleTitleChange}
+            onKeyDown={handleKeyDown}
             onClick={(e) => e.stopPropagation()}
           />
           <div className="flex-grow relative">
-            <TextEditor noteId={note.id} notes={notes} debounceUpdate={debounceUpdate} currentNote={currentNote} />
+            <TextEditor
+              ref={editorRef}
+              noteId={note.id}
+              notes={notes}
+              debounceUpdate={debounceUpdate}
+              currentNote={currentNote}
+            />
           </div>
         </div>
         <div className="text-r12 text-slate-500 flex justify-between">{dateToLocaleString}</div>
