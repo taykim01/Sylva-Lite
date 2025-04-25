@@ -10,6 +10,30 @@ export function createClient() {
       detectSessionInUrl: true,
       flowType: "pkce",
       debug: false,
+      storageKey: "supabase.auth.token",
+      storage: {
+        getItem: (key) => {
+          try {
+            return localStorage.getItem(key);
+          } catch (error) {
+            return null;
+          }
+        },
+        setItem: (key, value) => {
+          try {
+            localStorage.setItem(key, value);
+          } catch (error) {
+            // Ignore storage errors
+          }
+        },
+        removeItem: (key) => {
+          try {
+            localStorage.removeItem(key);
+          } catch (error) {
+            // Ignore storage errors
+          }
+        },
+      },
     },
   });
 }
