@@ -15,23 +15,19 @@ export function createClient() {
         getItem: (key) => {
           try {
             return localStorage.getItem(key);
-          } catch (error) {
+          } catch {
             return null;
           }
         },
         setItem: (key, value) => {
           try {
             localStorage.setItem(key, value);
-          } catch (error) {
-            // Ignore storage errors
-          }
+          } catch {}
         },
         removeItem: (key) => {
           try {
             localStorage.removeItem(key);
-          } catch (error) {
-            // Ignore storage errors
-          }
+          } catch {}
         },
       },
     },
