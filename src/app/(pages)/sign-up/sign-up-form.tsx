@@ -16,6 +16,7 @@ export default function SignUpForm() {
         onClick: signUp,
         disabled: !email || !password || !confirmPassword,
         loading,
+        id: "sign-up-button",
       }}
     >
       <div className="flex flex-col gap-5">

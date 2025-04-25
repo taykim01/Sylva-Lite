@@ -65,7 +65,7 @@ export function BaseContainer({
                 <Label htmlFor="view-mode">Board View</Label>
               </DropdownMenuItem>
               {showTryButton && (
-                <DropdownMenuItem onClick={toSignUp}>
+                <DropdownMenuItem onClick={toSignUp} id="try-sylva-button">
                   <Rocket size={16} className="text-slate-600" />
                   Try Sylva!
                 </DropdownMenuItem>
