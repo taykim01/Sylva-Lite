@@ -1,12 +1,14 @@
 "use client";
 
-import { useUserStore } from "@/core/states";
+import { useDashboardStore, useUserStore } from "@/core/states";
 import { handleSignIn, handleSignOut, handleSignUp } from "@/features/auth-features";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+
 export function useAuth() {
   const { user, _setUser, _resetUser } = useUserStore();
+  const { _setNotes, _setEdges } = useDashboardStore();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [email, setEmail] = useState("");
@@ -51,7 +53,9 @@ export function useAuth() {
       if (password !== confirmPassword) throw new Error("Passwords do not match");
       const { data, error } = await handleSignUp(email, password);
       if (error) throw error;
-      _setUser(data!);
+      _setUser(data!.user);
+      _setNotes(data!.notes);
+      _setEdges(data!.edges);
       router.push("/dashboard");
       toast("Signed up!");
     } catch (error) {

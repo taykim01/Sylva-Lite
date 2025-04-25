@@ -17,13 +17,13 @@ export async function handleSignIn(email: string, password: string): Promise<Res
     if (isInvalidCredentials) return { data: null, error: "Invalid email or password" };
     else return { data: null, error: error.message };
   }
-  const userID = data?.user?.id;
-  if (!userID) {
+  const userId = data?.user?.id;
+  if (!userId) {
     console.error("Error signing in: User ID not found");
     return { data: null, error: "User ID not found" };
   }
 
-  const { data: userData, error: userError } = await supabase.from("user").select("*").eq("id", userID).single();
+  const { data: userData, error: userError } = await supabase.from("user").select("*").eq("id", userId).single();
   if (userError || !userData) {
     console.error("Error getting user data:", userError?.message || "User not found");
     return { data: null, error: userError?.message || "User not found" };
@@ -31,7 +31,10 @@ export async function handleSignIn(email: string, password: string): Promise<Res
   return { data: userData as Tables<"user">, error: null };
 }
 
-export async function handleSignUp(email: string, password: string): Promise<Response<Tables<"user">>> {
+export async function handleSignUp(
+  email: string,
+  password: string,
+): Promise<Response<{ user: Tables<"user">; notes: Tables<"note">[]; edges: Tables<"edge">[] }>> {
   const supabase = await createClient();
   const {
     data: { user },
@@ -46,14 +49,14 @@ export async function handleSignUp(email: string, password: string): Promise<Res
     if (isEmailTaken) return { data: null, error: "Email is already taken" };
     else return { data: null, error: error.message };
   }
-  const userID = user?.id;
-  if (!userID) {
+  const userId = user?.id;
+  if (!userId) {
     console.error("Error signing up: User ID not found");
     return { data: null, error: "User ID not found" };
   }
 
   const newUser: Omit<Tables<"user">, "created_at"> = {
-    id: userID,
+    id: userId,
     email,
     push_subscription: null,
   };
@@ -62,7 +65,85 @@ export async function handleSignUp(email: string, password: string): Promise<Res
     console.error("Error creating user:", userError.message);
     return { data: null, error: userError.message };
   }
-  return { data: createdUser as Tables<"user">, error: null };
+
+  const defaultNotes: Omit<Tables<"note">, "id" | "created_at">[] = [
+    {
+      creator_id: userId,
+      title: "Welcome to Sylva!",
+      content: "<p>Sylva is a note-taking app that allows you to create and manage notes.</p>",
+      x: -450,
+      y: -150,
+    },
+    {
+      creator_id: userId,
+      title: "Create a note",
+      content: "<p>Create a note by clicking the + button.</p>",
+      x: -850,
+      y: 270,
+    },
+    {
+      creator_id: userId,
+      title: "Writing notes",
+      content: "<p>Use <strong><em><mark>markdown</mark></em></strong> to format your notes.</p>",
+      x: -550,
+      y: 270,
+    },
+    {
+      creator_id: userId,
+      title: "Connect notes",
+      content: "<p>Connect two notes by dragging from one note...</p>",
+      x: -100,
+      y: 100,
+    },
+    {
+      creator_id: userId,
+      title: "Connect notes",
+      content: "<p>to another note.</p>",
+      x: 270,
+      y: 300,
+    },
+    {
+      creator_id: userId,
+      title: "Delete notes",
+      content: "<p>Delete a note by clicking the trash can icon or the ellipses button.</p>",
+      x: -350,
+      y: 650,
+    },
+    {
+      creator_id: userId,
+      title: "Have fun!",
+      content: "<p></p>",
+      x: 0,
+      y: 650,
+    },
+  ];
+  const { data: createdNotes, error: noteError } = await supabase.from("note").insert(defaultNotes).select("*");
+  if (noteError) {
+    console.error("Error creating default notes:", noteError.message);
+    return { data: null, error: noteError.message };
+  }
+
+  const defaultEdge: Omit<Tables<"edge">, "id"> = {
+    source_handle: "node-right",
+    source_note_id: createdNotes.find(
+      (note) => note.content === "<p>Connect two notes by dragging from one note...</p>",
+    )?.id,
+    target_handle: "node-target-left",
+    target_note_id: createdNotes.find((note) => note.content === "<p>to another note.</p>")?.id,
+  };
+  const { data: createdEdge, error: edgeError } = await supabase.from("edge").insert(defaultEdge).select("*").single();
+  if (edgeError) {
+    console.error("Error creating default edge:", edgeError.message);
+    return { data: null, error: edgeError.message };
+  }
+  return {
+    data: {
+      user: createdUser as Tables<"user">,
+      notes: createdNotes as Tables<"note">[],
+      edges: [createdEdge as Tables<"edge">],
+    },
+    error: null,
+  };
 }
 
 export async function handleSignOut(): Promise<Response<void>> {
