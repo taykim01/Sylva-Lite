@@ -10,7 +10,7 @@ import { BaseNote } from "@/components/base/base-note";
 import { Tables } from "@/database.types";
 import { BaseTextEditor, BaseTextEditorProps, BaseTextEditorRef } from "@/components/base/base-text-editor";
 import { forwardRef } from "react";
-
+import { sendGAEvent } from "@next/third-parties/google";
 const DashboardTextEditor = forwardRef<BaseTextEditorRef, BaseTextEditorProps>((props, ref) => {
   return <BaseTextEditor {...props} ref={ref} />;
 });
@@ -50,6 +50,11 @@ export function DashboardContent({ userEmail }: { userEmail: string }) {
     debounceUpdate,
   } = useDashboard();
 
+  const handleCreateNote = async () => {
+    sendGAEvent("create_note");
+    await createNote();
+  };
+
   return (
     <BaseContainer
       className="relative"
@@ -76,7 +81,7 @@ export function DashboardContent({ userEmail }: { userEmail: string }) {
         notes={notes}
         debounceUpdate={debounceUpdate}
       />
-      <BaseBottomBar onCreateNote={createNote} />
+      <BaseBottomBar onCreateNote={handleCreateNote} />
     </BaseContainer>
   );
 }

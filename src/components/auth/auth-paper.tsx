@@ -11,7 +11,6 @@ export default function AuthPaper(props: {
     onClick: () => void;
     disabled?: boolean;
     loading: boolean;
-    id?: string;
   };
 }) {
   return (
@@ -32,13 +31,7 @@ export default function AuthPaper(props: {
         {props.children}
       </div>
       {props.cta && (
-        <Button
-          size="lg"
-          onClick={props.cta.onClick}
-          disabled={props.cta.disabled}
-          loading={props.cta.loading}
-          id={props.cta.id}
-        >
+        <Button size="lg" onClick={props.cta.onClick} disabled={props.cta.disabled} loading={props.cta.loading}>
           {props.cta.text}
         </Button>
       )}

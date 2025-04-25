@@ -3,9 +3,14 @@
 import AuthPaper from "@/components/auth/auth-paper";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/use-auth";
-
+import { sendGAEvent } from "@next/third-parties/google";
 export default function SignUpForm() {
   const { signUp, loading, email, password, confirmPassword, setEmail, setPassword, setConfirmPassword } = useAuth();
+
+  const handleSignUp = async () => {
+    sendGAEvent("sign_up");
+    await signUp();
+  };
 
   return (
     <AuthPaper
@@ -13,10 +18,9 @@ export default function SignUpForm() {
       subtitle="Create your personal bulletin board now!"
       cta={{
         text: "Sign Up",
-        onClick: signUp,
+        onClick: handleSignUp,
         disabled: !email || !password || !confirmPassword,
         loading,
-        id: "sign-up-button",
       }}
     >
       <div className="flex flex-col gap-5">

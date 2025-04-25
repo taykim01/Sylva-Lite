@@ -15,6 +15,7 @@ import { Label } from "../ui/label";
 import { useAuth } from "@/hooks/use-auth";
 import { useRouter } from "next/navigation";
 import { FeatureRequestMenu } from "../layout/feature-request-menu";
+import { sendGAEvent } from "@next/third-parties/google";
 
 interface BaseContainerProps {
   children: ReactNode;
@@ -44,6 +45,7 @@ export function BaseContainer({
   };
 
   const toSignUp = async () => {
+    sendGAEvent("click_try_sylva");
     router.push("/sign-up");
   };
 
