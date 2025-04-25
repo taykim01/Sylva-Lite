@@ -43,6 +43,10 @@ export function BaseContainer({
     router.push("/sign-in");
   };
 
+  const toSignUp = async () => {
+    router.push("/sign-up");
+  };
+
   return (
     <div className="w-full min-h-screen flex flex-col">
       <div className="h-10 py-2 px-4 bg-white flex items-center justify-between border-b border-slate-200 sticky top-0 z-10">
@@ -61,7 +65,7 @@ export function BaseContainer({
                 <Label htmlFor="view-mode">Board View</Label>
               </DropdownMenuItem>
               {showTryButton && (
-                <DropdownMenuItem onClick={toSignIn}>
+                <DropdownMenuItem onClick={toSignUp}>
                   <Rocket size={16} className="text-slate-600" />
                   Try Sylva!
                 </DropdownMenuItem>

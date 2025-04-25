@@ -9,8 +9,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useState } from "react";
-import { Button } from "../ui/button";
-import Spinner from "../common/spinner";
+import { Button } from "../../../components/ui/button";
+import Spinner from "../../../components/common/spinner";
 import { useDemo } from "@/hooks/use-demo";
 
 export function DemoStart() {
