@@ -1,6 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    serverActions: {
+      allowedOrigins: [
+        'localhost:3000',
+        'super-space-happiness-rwq66qg4pv72wr-3000.app.github.dev/',
+      ],
+    },
+  },
+
   async headers() {
     return [
       {
