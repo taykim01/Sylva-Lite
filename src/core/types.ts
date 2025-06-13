@@ -6,6 +6,12 @@ export interface UserState {
   _resetUser: () => void;
 }
 
+export interface SettingsState {
+  settings: Tables<"settings">;
+  _setSettings: (settings: Tables<"settings">) => void;
+  _resetSettings: () => void;
+}
+
 export interface DashboardState {
   notes: Tables<"note">[];
   viewMode: "board" | "list";

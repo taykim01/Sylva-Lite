@@ -1,6 +1,6 @@
 "use client";
 
-import { useDashboardStore, useUserStore } from "@/core/states";
+import { useDashboardStore, useUserStore, useSettingsStore } from "@/core/states";
 import { handleSignIn, handleSignOut, handleSignUp } from "@/features/auth-features";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -8,6 +8,7 @@ import { toast } from "sonner";
 
 export function useAuth() {
   const { user, _setUser, _resetUser } = useUserStore();
+  const { settings, _setSettings } = useSettingsStore();
   const { _setNotes, _setEdges } = useDashboardStore();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -19,9 +20,13 @@ export function useAuth() {
   const signIn = async () => {
     setLoading(true);
     try {
-      const { data, error } = await handleSignIn(email, password);
+      const {
+        data: { user: userData, settings: settingsData },
+        error,
+      } = await handleSignIn(email, password);
       if (error) throw error;
-      _setUser(data!);
+      _setUser(userData!);
+      _setSettings(settingsData!);
       router.push("/dashboard");
       toast("Signed in!");
     } catch (error) {
@@ -68,6 +73,7 @@ export function useAuth() {
 
   return {
     user,
+    settings,
     loading,
     error,
     signIn,

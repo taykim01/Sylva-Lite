@@ -36,7 +36,7 @@ export function BaseContainer({
   showTryButton = false,
   showSignOutButton = false,
 }: BaseContainerProps) {
-  const { signOut } = useAuth();
+  const { settings, signOut } = useAuth();
   const router = useRouter();
 
   const toSignIn = async () => {
@@ -63,7 +63,7 @@ export function BaseContainer({
           <DropdownMenuContent className="w-[180px]">
             <DropdownMenuGroup>
               <DropdownMenuItem onClick={(e) => e.preventDefault()}>
-                <Switch id="view-mode" checked={viewMode === "board"} onCheckedChange={onToggleViewMode} />
+                <Switch id="view-mode" checked={viewMode === settings.view} onCheckedChange={onToggleViewMode} />
                 <Label htmlFor="view-mode">Board View</Label>
               </DropdownMenuItem>
               {showTryButton && (

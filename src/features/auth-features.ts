@@ -28,7 +28,15 @@ export async function handleSignIn(email: string, password: string): Promise<Res
     console.error("Error getting user data:", userError?.message || "User not found");
     return { data: null, error: userError?.message || "User not found" };
   }
-  return { data: userData as Tables<"user">, error: null };
+
+  const { data: settingsData, error: settingsError } = await supabase.from("settings").select("*").eq("user_id", userId).single();
+  if(settingsError || !settingsData) {
+    const errMsg = settingsError?.message || "Settings not found";
+    console.error("Error getting settings data:", errMsg);
+    return { data: null, error: errMsg };
+  }
+
+  return { data: {user: userData as Tables<"user">, settings: settingsData as Tables<"settings">}, error: null };
 }
 
 export async function handleSignUp(
@@ -136,11 +144,23 @@ export async function handleSignUp(
     console.error("Error creating default edge:", edgeError.message);
     return { data: null, error: edgeError.message };
   }
+
+  const defaultSettings: Omit<Tables<"settings">, "id"> = {
+    user_id: userId,
+    view: "board",
+  };
+  const { data: createdSettings, error: settingsError } = await supabase
+    .from("settings")
+    .insert(defaultSettings)
+    .select("*")
+    .single();
+
   return {
     data: {
       user: createdUser as Tables<"user">,
       notes: createdNotes as Tables<"note">[],
       edges: [createdEdge as Tables<"edge">],
+      settings: createdSettings as Tables<"settings">,
     },
     error: null,
   };
