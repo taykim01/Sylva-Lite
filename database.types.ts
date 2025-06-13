@@ -7,31 +7,6 @@ export type Json =
   | Json[]
 
 export type Database = {
-  graphql_public: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      graphql: {
-        Args: {
-          operationName?: string
-          query?: string
-          variables?: Json
-          extensions?: Json
-        }
-        Returns: Json
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
   public: {
     Tables: {
       edge: {
@@ -123,6 +98,32 @@ export type Database = {
           {
             foreignKeyName: "note_creator_id_fkey"
             columns: ["creator_id"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      settings: {
+        Row: {
+          id: string
+          user_id: string
+          view: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          view: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          view?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "settings_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "user"
             referencedColumns: ["id"]
@@ -272,11 +273,7 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
   public: {
     Enums: {},
   },
 } as const
-

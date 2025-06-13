@@ -1,6 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    serverActions: {
+      allowedOrigins: ["localhost:3000", "organic-chainsaw-465vv57jjjr2qg7v-3000.app.github.dev/"],
+    },
+  },
+
   async headers() {
     return [
       {
