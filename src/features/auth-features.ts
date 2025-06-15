@@ -5,7 +5,8 @@ import { createClient } from "@/infrastructures/supabase/server";
 import { Response } from "@/core/types";
 import { Tables } from "@/database.types";
 
-export async function handleSignIn(email: string, password: string): Promise<Response<Tables<"user">>> {
+export async function handleSignIn(email: string, password: string): Promise<Response<
+  { user: Tables<"user">; settings: Tables<"settings"> } | null>> {
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
@@ -42,7 +43,7 @@ export async function handleSignIn(email: string, password: string): Promise<Res
 export async function handleSignUp(
   email: string,
   password: string,
-): Promise<Response<{ user: Tables<"user">; notes: Tables<"note">[]; edges: Tables<"edge">[] }>> {
+): Promise<Response<{ user: Tables<"user">; notes: Tables<"note">[]; edges: Tables<"edge">[], settings: Tables<"settings"> } | null>> {
   const supabase = await createClient();
   const {
     data: { user },

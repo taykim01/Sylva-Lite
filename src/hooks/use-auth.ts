@@ -21,9 +21,14 @@ export function useAuth() {
     setLoading(true);
     try {
       const {
-        data: { user: userData, settings: settingsData },
+        data,
         error,
       } = await handleSignIn(email, password);
+      const userData = data?.user;
+      const settingsData = data?.settings;
+      if (!userData || !settingsData) {
+        throw new Error("User or settings data not found");
+      }
       if (error) throw error;
       _setUser(userData!);
       _setSettings(settingsData!);

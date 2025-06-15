@@ -7,10 +7,10 @@ import { BaseBottomBar } from "@/components/base/base-bottom-bar";
 import { BaseSideDrawer } from "@/components/base/base-side-drawer";
 import { useDashboard } from "@/hooks/use-dashboard";
 import { BaseNote } from "@/components/base/base-note";
-import { Tables } from "@/database.types";
 import { BaseTextEditor, BaseTextEditorProps, BaseTextEditorRef } from "@/components/base/base-text-editor";
 import { forwardRef } from "react";
 import { sendGAEvent } from "@next/third-parties/google";
+import { Tables } from "@/database.types";
 const DashboardTextEditor = forwardRef<BaseTextEditorRef, BaseTextEditorProps>((props, ref) => {
   return <BaseTextEditor {...props} ref={ref} />;
 });
@@ -58,7 +58,7 @@ export function DashboardContent({ userEmail }: { userEmail: string }) {
   return (
     <BaseContainer
       className="relative"
-      viewMode={viewMode}
+      viewMode={viewMode as "board" | "list"}
       onToggleViewMode={toggleViewMode}
       accountName={userEmail}
       showSignOutButton={true}
@@ -71,7 +71,7 @@ export function DashboardContent({ userEmail }: { userEmail: string }) {
         onDeleteEdge={deleteEdge}
         nodeComponent={DashboardNote}
       />
-      <BaseList notes={notes} viewMode={viewMode} noteComponent={DashboardNote} />
+      <BaseList notes={notes} viewMode={viewMode as "board" | "list"} noteComponent={DashboardNote} />
       <BaseSideDrawer
         currentNote={currentNote || null}
         onDeleteNote={deleteNote}
