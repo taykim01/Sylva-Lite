@@ -18,11 +18,9 @@ export function useDashboard() {
   const {
     edges,
     notes,
-    viewMode,
     _addNote,
     _updateNote,
     _deleteNote,
-    _setViewMode,
     _addEdge,
     _updateEdge,
     _deleteEdge,

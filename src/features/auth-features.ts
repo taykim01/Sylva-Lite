@@ -155,6 +155,11 @@ export async function handleSignUp(
     .select("*")
     .single();
 
+    if(settingsError) {
+    console.error("Error creating default settings:", settingsError.message);
+    return { data: null, error: settingsError.message };
+  }
+
   return {
     data: {
       user: createdUser as Tables<"user">,
