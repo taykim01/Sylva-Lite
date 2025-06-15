@@ -52,7 +52,7 @@ export function DemoContent() {
   return (
     <BaseContainer
       className="relative"
-      viewMode={viewMode}
+      viewMode={viewMode ?? "board"}
       onToggleViewMode={toggleViewMode}
       accountName="Demo Account"
       showTryButton

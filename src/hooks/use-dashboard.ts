@@ -4,11 +4,13 @@ import { useDashboardStore } from "@/core/states";
 import { Tables } from "@/database.types";
 import { handleCreateEdge, handleUpdateEdge, handleDeleteEdge } from "@/features/edge-features";
 import { handleCreateEmptyNote, handleDeleteNote, handleUpdateNote } from "@/features/note-features";
+import { updateSettings } from "@/features/settings-features";
 import { Position } from "@xyflow/react";
 import { debounce } from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
+import { useSettingsStore } from "@/core/states";
 
 export function useDashboard() {
   const searchParams = useSearchParams();
@@ -28,6 +30,7 @@ export function useDashboard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const { settings, _setSettings } = useSettingsStore();
 
   const createNote = async () => {
     setLoading(true);
@@ -111,8 +114,9 @@ export function useDashboard() {
 
   const currentNote = notes?.find((note) => note.id === noteId);
 
-  const toggleViewMode = () => {
-    _setViewMode(viewMode === "board" ? "list" : "board");
+  const toggleViewMode = async () => {
+    const {data: newSettings} = await updateSettings(settings.id, { view: settings.view === "board" ? "list" : "board" });
+    _setSettings(newSettings!);
   };
 
   const createEdge = async (
@@ -174,7 +178,7 @@ export function useDashboard() {
     selectNote,
     debounceUpdate,
     toggleViewMode,
-    viewMode,
+    viewMode: settings.view,
     createEdge,
     updateEdge,
     deleteEdge,
